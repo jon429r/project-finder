@@ -2,9 +2,54 @@
     can open safari using the command: os.system('open -a Safari')
     use this to implement the open command for internet links
     maybe include a column in the table to include links to project websites
-    aka projects that dont have physical directories on the local computer
+    aka projects that don't have physical directories on the local computer
 
-    can also open vs code with the command: os.system('open -a "Visual\ Studio\ Code"')
+    can also open vs code with the command: os.system('open -a "Visual\ Studio\ Code')
+
+    use validators library to check urls before opening
+
+    In the open_command function, you are trying to get the project_id using project_id
+    = cursor.execute('SELECT id FROM projects WHERE name=?', project_name). Instead, use
+    fetchone() to retrieve the result and then get the id. Also, handle cases where the project
+    with the given name doesn't exist.
+
+    It's good practice to close the database connection when your script is finished executing.
+    You can do this using connection.close().
+
+    You are already using f-strings for string formatting, which is great.
+    Continue using them for consistency and improved readability.
+
+    Separation of Concerns:
+Consider breaking down your code further into separate modules or classes, each responsible for a specific aspect of the
+application (e.g., a module for database operations, a module for project management functions, etc.). This can improve
+code organization and maintainability.
+Use Functions for Repeated Code:
+Identify sections of code that are repeated and consider encapsulating them in functions. For example, the code that
+handles confirming user actions and the code that opens projects in Safari or Finder could be extracted into functions.
+Consistent Naming Conventions:
+Ensure consistent naming conventions for variables, functions, and comments. This improves readability and
+maintainability. For example, use consistent casing (e.g., snake_case for variables and functions, CamelCase for classes).
+Error Handling:
+Enhance error handling to provide more informative error messages and gracefully handle unexpected situations.
+Consider logging errors for debugging purposes.
+Command Dispatching:
+Instead of using multiple if-elif statements to dispatch commands, consider using a dictionary to map commands to
+functions. This can make the code more scalable and easier to maintain.
+Configuration Management:
+If there are configuration parameters, such as the database name, consider using a configuration file or environment
+variables to manage them centrally.
+Documentation:
+Add more documentation, including docstrings for functions, to describe their purpose, parameters, and return values.
+This helps others (and yourself) understand the code.
+Refactor Long Functions:
+If functions become too long or handle multiple concerns, consider refactoring them into smaller, focused functions.
+This improves readability and makes the code more modular.
+Use Context Managers:
+Use context managers (with statements) for handling resources like database connections. This ensures that resources
+are properly managed and released.
+User Interface Improvements:
+Consider enhancing the user interface by providing more feedback, clearer prompts, and maybe even incorporating a
+command-line argument parser for more flexibility.
 '''
 
 import sqlite3
@@ -14,7 +59,7 @@ import os
 print('Welcome to the project manager!')
 
 
-##take in data from the user and pass it to the database
+# take in data from the user and pass it to the database
 connection = sqlite3.connect(database='database.db')
 cursor = connection.cursor()
 
@@ -52,9 +97,19 @@ def new_command(user_input):
             working_directory = parsed_input[6]
         elif parsed_input[5] == '-link':
             project_link = parsed_input[6]
-    print(f'Project name: {project_name}')
-    print(f'Working directory: {working_directory}')
-    print(f'Project link: {project_link}')
+    try:
+        print(f'Project name: {project_name}')
+    except:
+        print(f'Project name: None')
+    try:
+        print(f'Working directory: {working_directory}')
+    except:
+        print('Working directory: None')
+    try:
+        print(f'Project link: {project_link}')
+    except:
+        print('Project link: None')
+
     print('Please confirm the details above are correct.')
     confirm = False;
     while confirm == False:
@@ -63,7 +118,13 @@ def new_command(user_input):
         if confirm == 'Y':
             print('Adding project to database...')
             try:
-                cursor.execute('INSERT INTO projects (name, directory, link) VALUES (?, ?, ?)', (project_name, working_directory, project_link))
+                # Create finished_projects table if it doesn't exist
+                cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects \
+                (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
+                cursor.execute('INSERT INTO projects (name, directory, link) VALUES (?, ?, ?)'
+                               , (project_name, working_directory, project_link))
+                cursor.execute('DELETE FROM projects WHERE name = ?', (project_name,))
+
                 connection.commit()
             except:
                 print('Error: Unable to add project to database.')
@@ -95,23 +156,23 @@ def finish_command(user_input):
         print(f'Project ID: {project_id}')
         print('Please confirm the details above are correct.')
         confirm = False
-        while confirm == False:
+        while not confirm:
             confirm = input('Y/N')
 
             if confirm == 'Y':
                 print('Removing project from database...')
-                ##create a finished projects table if doesn't exist
-                cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
-                ##move the project to the finished projects table
-                cursor.execute('INSERT INTO finished_projects SELECT * FROM projects WHERE id = ?', (project_id,))
+                # Create finished_projects table if it doesn't exist
+                cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects '
+                               '(id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
+                # Move the project to the finished projects table
+                cursor.execute('INSERT INTO finished_projects (name, directory, link) '
+                               'SELECT name, directory, link FROM projects WHERE id = ?', (project_id,))
                 cursor.execute('DELETE FROM projects WHERE id = ?', (project_id,))
                 connection.commit()
                 print('... done!')
-                confirm = True
             elif confirm == 'N':
                 print('Canceling project deletion...')
                 print('... Canceled!')
-                confirm = True
             else:
                 print('Invalid input, please try again.')
 
@@ -119,27 +180,25 @@ def finish_command(user_input):
         project_name = parsed_input[2]
         print(f'Project name: {project_name}')
         print('Please confirm the details above are correct.')
-        confirm = False;
-        while confirm == False:
+        confirm = False
+        while not confirm:
             confirm = input('Y/N')
 
             if confirm == 'Y':
                 print('Removing project from database...')
-                ##create a finished projects table if doesn't exist
-                cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects (id INTEGER PRIMARY KEY, name TEXT, directory TEXT)')
-                ##move the project to the finished projects table
-                cursor.execute('INSERT INTO finished_projects SELECT * FROM projects WHERE id = ?', (project_id,))
-
+                # Create finished_projects table if it doesn't exist
+                cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
+                # Move the project to the finished projects table
+                cursor.execute('INSERT INTO finished_projects (name, directory, link) SELECT name, directory, link FROM projects WHERE name = ?', (project_name,))
                 cursor.execute('DELETE FROM projects WHERE name = ?', (project_name,))
                 connection.commit()
                 print('... done!')
-                confirm = True
             elif confirm == 'N':
                 print('Canceling project deletion...')
                 print('... Canceled!')
-                confirm = True
             else:
                 print('Invalid input, please try again.')
+
 
 def open_in_safari(project_id):
     cursor.execute('SELECT * FROM projects WHERE id = ?', (project_id,))
@@ -147,11 +206,19 @@ def open_in_safari(project_id):
     print(f'Opening project {project[1]}...')
     print(f'Working directory: {project[2]}')
     print(f'Project link: {project[3]}')
-    os.system(f'cd')
     try:
+        os.system(f'cd')
         os.system(f'open -a Safari {project[3]}')
     except:
         print('Error: Unable to open project link.')
+        input = input('Would you like to manually type in the link: Y/N')
+        if input == 'Y' or 'y':
+            link = input('What is the link')
+            os.system(f'cd')
+            os.system(f'open -a Safari {link}')
+            return
+        elif input == 'N' or 'n':
+            print('Cancelling')
         return
     
     print('... done!')
@@ -179,7 +246,7 @@ def open_command(user_input):
         project_id = parsed_input[2]
         print(f'Project ID: {project_id}')
         print('Please confirm the details above are correct.')
-        confirm, deny = False;
+        confirm, deny = False, False
         while confirm or deny is False:
             confirm = input('Y/N')
 
@@ -209,6 +276,7 @@ def open_command(user_input):
 
     elif parsed_input[1] == '-name':
         project_name = parsed_input[2]
+        project_id = cursor.execute('SELECT id FROM projects WHERE name=?', project_name)
         print(f'Project name: {project_name}')
         print('Please confirm the details above are correct.')
         confirm = False;
@@ -224,9 +292,9 @@ def open_command(user_input):
                     open_location = -1
                     open_location = input('Enter a number: ')
                     if open_location == '1':
-                        open_in_finder(project_id=project_id)
+                        open_in_finder(project_id)
                     elif open_location == '2':
-                        open_in_safari(project_id=project_id)
+                        open_in_safari(project_id)
                     else:
                         print('Invalid input, please try again.')  
 
@@ -243,7 +311,7 @@ def main():
 
         user_input = input('Enter a command: ')
 
-        if user_input.startswith('help'):
+        if user_input.startswith('help') or user_input == '?':
             help_command()
 
         elif user_input.startswith('new'):
