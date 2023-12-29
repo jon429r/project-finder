@@ -17,7 +17,8 @@ class finished_project:
                 confirm = input('Y/N')
 
                 if confirm == 'Y':
-                    from database import database as db
+                    from database import database as dataclass
+                    db = dataclass()
                     db.remove_project_id(project_id)
 
                 elif confirm == 'N':
