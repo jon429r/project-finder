@@ -10,7 +10,9 @@ class finished_project:
         parsed_input = user_input.split(' ')
         if parsed_input[1] == '-id':
             project_id = parsed_input[2]
-            print(f'Project ID: {project_id}')
+            project_info = db.get_project_id(project_id)
+            print(project_info)
+
             print('Please confirm the details above are correct.')
             confirm = False
             while not confirm:
@@ -29,13 +31,16 @@ class finished_project:
 
         elif parsed_input[1] == '-name':
             project_name = parsed_input[2]
-            print(f'Project name: {project_name}')
+            project_info = db.get_project_name(project_name)
+            print(project_info)
             print('Please confirm the details above are correct.')
             confirm = False
             while not confirm:
                 confirm = input('Y/N')
 
                 if confirm == 'Y':
+                    from database import database as dataclass
+                    db = dataclass()
                     db.remove_project_name(project_name)
 
                 elif confirm == 'N':

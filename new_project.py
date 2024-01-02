@@ -19,17 +19,17 @@ class new_project:
         project_link = None
         working_directory = None
 
-        if len(parsed_input) >= 3:
+        if len(parsed_input) == 3:
             project_name = parsed_input[2]
 
-        if len(parsed_input) >= 4:
+        if len(parsed_input) == 4:
             if parsed_input[3] == '-dir' and len(parsed_input) >= 5:
                 working_directory = parsed_input[4]
             elif parsed_input[3] == '-link' and len(parsed_input) == 5:
                 project_link = parsed_input[4]
                 working_directory = 'None'
 
-        if len(parsed_input) >= 7:
+        if len(parsed_input) == 7:
             if parsed_input[5] == '-dir' and len(parsed_input) == 7:
                 working_directory = parsed_input[6]
             elif parsed_input[5] == '-link' and len(parsed_input) == 7:
