@@ -21,8 +21,7 @@ This application is built using an SQLite database to store project details, wit
 
 As the project is still in development, there are a few identified bugs:
 
-- Creating a project with links: Link does not register when creating a project.
-- Finishing a project with a name: Error is thrown when finishing a project using its name as the identifier.
+-Bug while finish project as I am implementing a new feature
 
 ## Plans for the Future
 
