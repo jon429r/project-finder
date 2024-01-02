@@ -10,6 +10,13 @@ Project-Finder is a project management tool developed to address the challenges 
 
 This application is built using an SQLite database to store project details, with Python handling interactions and queries. The primary entity is the project, which includes fields such as id, name, link, and directory. The id serves as the primary key, and while the project name is required, the link and directory are optional. Another entity, finished project, stores information on completed projects.
 
+## How to Run
+
+- Clone the repository: https://github.com/jon429r/project-finder.git
+- install python if version is less than 3.7 using the provided script 'install_python3.bash'.
+- Do this by running chmod +x ./install_python.bash && ./install_python.bash
+- then run the code with the command 'python3 main.py'
+
 ## Bugs
 
 As the project is still in development, there are a few identified bugs:
