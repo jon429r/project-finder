@@ -30,9 +30,9 @@ class new_project:
                 working_directory = 'None'
 
         if len(parsed_input) >= 7:
-            if parsed_input[5] == '-dir' and len(parsed_input) == 8:
+            if parsed_input[5] == '-dir' and len(parsed_input) == 7:
                 working_directory = parsed_input[6]
-            elif parsed_input[5] == '-link' and len(parsed_input) == 8:
+            elif parsed_input[5] == '-link' and len(parsed_input) == 7:
                 project_link = parsed_input[6]
         try:
             print(f'Project name: {project_name}')

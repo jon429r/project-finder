@@ -69,22 +69,37 @@ cursor = connection.cursor()
 
 
 def help_command():
-    help_message = """
-    List of possible commands: \n
-    1. Create a new project: new -name <"project_name"> -dir <"working_directory"> \n
-    please insert the whole directory path starting with a '/'
-    Additional arguments: \n
-    -link <"project_link"> \n
-    2. View existing projects: todo \n
-    3. Finished an existing project: finish -name <project_name> \n
-    You can also remove a project by typing finish -id <project_id> \n
-    4. Open an existing project: open -name <project_name> \n
-    You can also open a project by typing open -id <project_id> \n
-    5. Exit \n
-    6. Help \n
-    """
+    print("""
+        List of available commands:
 
-    print(help_message)
+        1. Create a new project:
+        new -name <"project_name"> -dir <"working_directory"> -link <"project_link">
+        Create a new project with a specified name, working directory, and optional project link.
+
+        2. View existing projects:
+        todo
+        Display a list of existing projects.
+
+        3. Finish an existing project:
+        finish -name <project_name>
+        Mark an existing project as finished. You can also remove a project using its ID:
+        finish -id <project_id>
+
+        4. Open an existing project:
+        open -name <project_name>
+        Open an existing project by name. Alternatively, you can open a project using its ID:
+        open -id <project_id>
+
+        5. Exit:
+        exit
+        Quit the application.
+
+        6. Help:
+        help
+        Display this help message.
+
+        Please replace placeholders like <project_name>, <working_directory>, <project_link>, and <project_id> with the actual values.
+    """)
 
 def todo_command():
     print('Viewing existing projects...')

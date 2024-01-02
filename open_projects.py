@@ -25,14 +25,15 @@ class open:
                         print('1. Finder')
                         print('2. Safari')
                         open_location = -1
-                        open_location = input('Enter a number or Q to quit: ')
+                        open_location = input('Enter a number or Q to cancel: ')
                         if open_location == '1':
                             self.in_finder('id', project_id)
                         elif open_location == '2':
                             self.in_safari('id', project_id)
                         elif open_location.lower() == 'q':
                             confirm = 'N'
-                            break
+                            print('Canceling project opening...')
+                            return
                         else:
                             print('Invalid input, please try again.')     
 
@@ -61,14 +62,15 @@ class open:
                         print('1. Finder')
                         print('2. Safari')
                         open_location = -1
-                        open_location = input('Enter a number or Q to quit: ')
+                        open_location = input('Enter a number or Q to cancel: ')
                         if open_location == '1':
                             self.in_finder('name', project_id)
                         elif open_location == '2':
                             self.in_safari('name', project_id)
                         elif open_location.lower() == 'q':
                             confirm = 'N'
-                            break
+                            print('Canceling project opening...')
+                            return
                         else:
                             print('Invalid input, please try again.')  
 

@@ -1,0 +1,116 @@
+Input used to test all the methods of the class
+
+new project with dir then link
+    new -name project_name1 -dir Documents/GitHub/Project-Finder -link https://github.com/jon429r/project-finder
+#TODO issues:
+    does not display any project link
+
+new project with link then dir
+    new -name project_name2 -link https://github.com/jon429r/project-finder -dir Documents/GitHub/Project-Finder
+
+issues:
+    N/a
+
+new project with link no dir
+    new -name project_name3 -link https://github.com/jon429r/project-finder
+issues:
+    N/a
+
+new project with dir no link
+    new -name project_name4 -dir Documents/GitHub/Project-Finder
+issues:
+    N/a
+
+new project no dir no link
+    new -name project_name5
+issues:
+    N/a
+
+new project already exists
+    new -name project_name1 -dir Documents/GitHub/Project-Finder -link https://github.com/jon429r/project-finder
+issues:
+    TODO link not displayed
+
+new project with invalid link
+    new -name project_name6 -dir Documents/GitHub/Project-Finder -link http://github.comm/jon429r/project-finder
+issues:
+    link not displayed
+
+new project with invalid dir
+    new -name project_name7 -dir Documents/GitHub/this_does_not_exist -link
+issues: N/a
+
+todo
+    todo
+issues: N/a
+
+finish project with id
+    finish -id 1
+issues: N/a
+
+finish project with name
+    finish -name project_name1
+issues:
+TODO Traceback (most recent call last):
+  File "/Users/jonathanday/Documents/GitHub/project-finder/main.py", line 150, in <module>
+    main()
+  File "/Users/jonathanday/Documents/GitHub/project-finder/main.py", line 134, in main
+    fp.command(user_input)
+  File "/Users/jonathanday/Documents/GitHub/project-finder/finish_project.py", line 39, in command
+    db.remove_project_name(project_name)
+UnboundLocalError: local variable 'db' referenced before assignment
+
+finished project name does not exist
+    finish -name this_does_not_exist
+issues:
+      File "/Users/jonathanday/Documents/GitHub/project-finder/main.py", line 150, in <module>
+    main()
+  File "/Users/jonathanday/Documents/GitHub/project-finder/main.py", line 134, in main
+    fp.command(user_input)
+  File "/Users/jonathanday/Documents/GitHub/project-finder/finish_project.py", line 39, in command
+    db.remove_project_name(project_name)
+UnboundLocalError: local variable 'db' referenced before assignment
+
+finished project id does not exist
+    finish -id 1000
+issues:
+    removes the project which does not exist in the database
+
+open project with safari, with name
+    open -name project_name1
+    2
+open project with directory, with name
+    open -name project_name1
+    1
+open project with safari, with id
+    open -id 2
+    2
+open project with directory, with id
+    open -id 1
+    1
+open project with invalid link
+    open -name project_name6
+    2
+open project with invalid directory
+    open -name project_name7
+    1
+open project with no link
+    open -name project_name3
+    1
+open project wit no dir
+    open -name project_name4
+    1
+
+exit using quit
+    quit
+exit using exit
+    exit
+exit using q
+    q
+
+help with ?
+    ?
+help with help
+    help
+help with Help
+    Help
