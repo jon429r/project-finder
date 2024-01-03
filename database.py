@@ -61,15 +61,15 @@ class database:
             return
         
     def get_project_info(self, idenifier, project):
-        if idenifier is 'name':
+        if idenifier == 'name':
             try:
-                self.cursor.execute(f'SELECT * FROM projects WHERE id =?', (project,))
+                self.cursor.execute(f'SELECT * FROM projects WHERE name =?', (project,))
                 return self.cursor.fetchone()
             except:
                 print('Error: Unable to get project info.')
                 return
 
-        if idenifier is 'id':
+        if idenifier == 'id':
             try:
                 self.cursor.execute(f'SELECT * FROM projects WHERE id =?', (project,))
                 return self.cursor.fetchone()

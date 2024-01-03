@@ -19,21 +19,19 @@ class new_project:
         project_link = None
         working_directory = None
 
-        if len(parsed_input) == 3:
-            project_name = parsed_input[2]
+        # Loop through the parsed input and assign the values to the flags
+        for i in range(len(parsed_input)):
+            if parsed_input[i] == '-name':
+                project_name = parsed_input[i+1]
+            elif parsed_input[i] == '-link':
+                project_link = parsed_input[i+1]
+            elif parsed_input[i] == '-dir':
+                working_directory = parsed_input[i+1]
 
-        if len(parsed_input) == 4:
-            if parsed_input[3] == '-dir' and len(parsed_input) >= 5:
-                working_directory = parsed_input[4]
-            elif parsed_input[3] == '-link' and len(parsed_input) == 5:
-                project_link = parsed_input[4]
-                working_directory = 'None'
+        if project_name == None:
+            print('Error: Please specify a project name.')
+            return
 
-        if len(parsed_input) == 7:
-            if parsed_input[5] == '-dir' and len(parsed_input) == 7:
-                working_directory = parsed_input[6]
-            elif parsed_input[5] == '-link' and len(parsed_input) == 7:
-                project_link = parsed_input[6]
         try:
             print(f'Project name: {project_name}')
         except:
