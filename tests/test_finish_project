@@ -1,0 +1,29 @@
+import sqlite3
+import pytest
+from database.database import database
+
+# Pytest fixture to create a temporary database connection
+@pytest.fixture
+def temp_database(tmp_path):
+    # Create a temporary database file in a temporary directory
+    db_path = tmp_path / "test_database.db"
+
+    # Instantiate the database class and initialize the database
+    db_instance = database(db_name=str(db_path))
+    yield db_instance
+    db_instance.connection.close()
+
+def test_finish_project(temp_database):
+    # Arrange
+    db = temp_database
+    name = 'TestProject'
+    directory = '/path/to/project'
+    link = 'www.github.com/testproject'
+    
+    user_input = 'finish -name TestProject'
+
+    #act
+    db.new_project(name, directory, link)
+
+    # Assert
+    result = db.get_project_info('name', name)
