@@ -13,7 +13,7 @@ class new_project:
             db.create_table(table_name='projects')
         except TypeError as e:
             print(f'Error: Unable to create table. {e}')
-            return
+            return 400
         parsed_input = user_input.split(' ')
         project_name = None
         project_link = None
@@ -58,7 +58,7 @@ class new_project:
                     db.new_project(name=project_name, directory=working_directory, link=project_link)
                 except:
                     print('Error: Unable to add project to database.')
-                    return
+                    return 400
                 print('... done!')
                 confirm = True
             elif confirm == 'N':

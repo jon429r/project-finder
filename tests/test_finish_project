@@ -1,6 +1,7 @@
 import sqlite3
 import pytest
 from database.database import database
+from project.finish_project import finished_project
 
 # Pytest fixture to create a temporary database connection
 @pytest.fixture
@@ -14,16 +15,20 @@ def temp_database(tmp_path):
     db_instance.connection.close()
 
 def test_finish_project(temp_database):
+    fp = finished_project()
     # Arrange
     db = temp_database
     name = 'TestProject'
     directory = '/path/to/project'
     link = 'www.github.com/testproject'
-    
-    user_input = 'finish -name TestProject'
 
-    #act
+    # Act
     db.new_project(name, directory, link)
+
+    # Invoke finished_project to finish the project
+    user_input = 'finish -name TestProject'
+    fp.command(user_input)
 
     # Assert
     result = db.get_project_info('name', name)
+    assert result is None

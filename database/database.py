@@ -15,6 +15,7 @@ class database:
             self.connection.commit()
         except sqlite3.IntegrityError as e:
             print(f'Error: Unable to add project to database. {e}')
+            return 400
 
 
     def create_table(self, table_name):
@@ -24,6 +25,7 @@ class database:
                     (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
         except sqlite3.OperationalError as e:
             print(f'Error: Unable to create {table_name} table. {e}')
+            return 400
 
 
     def remove_project_id(self, id):
@@ -33,7 +35,8 @@ class database:
             self.cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
         except sqlite3.OperationalError as e:
             print(f'Error: Unable to create finished table. {e}')
-            return
+            return 400
+
         # Move the project to the finished projects table
         try:
             self.cursor.execute('INSERT INTO finished_projects (name, directory, link) SELECT name, directory, link FROM projects WHERE id = ?', (id,))
@@ -42,7 +45,8 @@ class database:
             print('... done!')
         except sqlite3.IntegrityError as e:
             print(f'Error: Unable to add project to database. {e}')
-        
+            return 400
+
     def remove_project_name(self, name):
         print('Removing project from database...')
         # Create finished_projects table if it doesn't exist
@@ -50,7 +54,7 @@ class database:
             self.cursor.execute('CREATE TABLE IF NOT EXISTS finished_projects (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
         except sqlite3.OperationalError as e:
             print(f'Error: Unable to create finished table. {e}')
-            return
+            return 400
         # Move the project to the finished projects table
         try:
             self.cursor.execute('INSERT INTO finished_projects (name, directory, link) SELECT name, directory, link FROM projects WHERE name =?', (name,))
@@ -59,6 +63,7 @@ class database:
             print('... done!')
         except sqlite3.IntegrityError as e:
             print(f'Error: Unable to add project to database. {e}')
+            return 400
 
 
     def create_table(self, table_name):
@@ -68,7 +73,7 @@ class database:
 
         except sqlite3.OperationalError as e:
             print(f'Error: Unable to create {table_name} table. {e}')
-            return
+            return 400
         
     def get_project_info(self, idenifier, project):
         if idenifier == 'name':
@@ -77,7 +82,7 @@ class database:
                 return self.cursor.fetchone()
             except:
                 print('Error: Unable to get project info.')
-                return
+                return 400
 
         if idenifier == 'id':
             try:
@@ -85,4 +90,4 @@ class database:
                 return self.cursor.fetchone()
             except:
                 print('Error: Unable to get project info.')
-                return
+                return 400

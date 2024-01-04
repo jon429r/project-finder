@@ -19,6 +19,7 @@ class finished_project:
                 print(info)
             else:
                 print("Project not found.")
+                return 400
 
             print('Please confirm the details above are correct.')
             confirm = False
@@ -33,8 +34,10 @@ class finished_project:
                 elif confirm == 'N':
                     print('Canceling project deletion...')
                     print('... Canceled!')
+                    return 400
                 else:
                     print('Invalid input, please try again.')
+                    return 400
 
         elif parsed_input[1] == '-name':
             project_name = parsed_input[2]
@@ -44,6 +47,7 @@ class finished_project:
                 print(info)
             else:
                 print("Project not found.")
+                return 400
 
             print('Please confirm the details above are correct.')
             confirm = False
@@ -52,9 +56,11 @@ class finished_project:
 
                 if confirm == 'Y':
                     self.db.remove_project_name('name', project_name)
+                    return 200
 
                 elif confirm == 'N':
                     print('Canceling project deletion...')
                     print('... Canceled!')
+                    return 400
                 else:
                     print('Invalid input, please try again.')

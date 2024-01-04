@@ -33,7 +33,7 @@ class open:
                         elif open_location.lower() == 'q':
                             confirm = 'N'
                             print('Canceling project opening...')
-                            return
+                            return 400
                         else:
                             print('Invalid input, please try again.')     
 
@@ -43,6 +43,7 @@ class open:
                     print('Canceling project opening...')
                     print('... Canceled!')
                     deny = True
+                    return 400
                 else:
                     print('Invalid input, please try again.')
 
@@ -70,7 +71,7 @@ class open:
                         elif open_location.lower() == 'q':
                             confirm = 'N'
                             print('Canceling project opening...')
-                            return
+                            return 400
                         else:
                             print('Invalid input, please try again.')  
 
@@ -78,6 +79,7 @@ class open:
                     print('Canceling project opening...')
                     print('... Canceled!')
                     confirm = True
+                    return 400
                 else:
                     print('Invalid input, please try again.')
 
@@ -97,6 +99,7 @@ class open:
                 print('Error: Project not found.')
         except Exception as e:
             print(f'Error: {e}')
+            return 400
 
     def in_finder(self, identifier, project_id):
         self.cursor.execute(f'SELECT * FROM projects WHERE {identifier} = ?', (project_id,))
@@ -109,7 +112,7 @@ class open:
             os.system(f'open {project[2]}')
         except:
             print('Error: Unable to open project dir.')
-            return
+            return 400
 
         print('done...!')
 
