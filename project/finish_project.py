@@ -29,7 +29,7 @@ class finished_project:
                 if confirm == 'Y':
                     from database import database as dataclass
                     db = dataclass()
-                    db.remove_project_id(project_id)
+                    db.remove_project('id', project_id)
 
                 elif confirm == 'N':
                     print('Canceling project deletion...')
@@ -55,7 +55,7 @@ class finished_project:
                 confirm = input('Y/N')
 
                 if confirm == 'Y':
-                    self.db.remove_project_name('name', project_name)
+                    self.db.remove_project('name', project_name)
                     return 200
 
                 elif confirm == 'N':

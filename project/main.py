@@ -54,8 +54,6 @@ command-line argument parser for more flexibility.
 
 import sqlite3
 import tabulate
-import os
-from database import database as db
 from open_project import open as open
 from new_project import new_project as np
 from finish_project import finished_project as fp

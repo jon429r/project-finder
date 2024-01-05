@@ -1,6 +1,6 @@
 import sqlite3
 import pytest
-from database.database import database as Database
+from project.database import database as Database
 
 # Pytest fixture to create a temporary database connection
 @pytest.fixture
