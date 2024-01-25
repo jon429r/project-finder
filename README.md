@@ -19,9 +19,8 @@ This application is built using an SQLite database to store project details, wit
 
 ## Bugs
 
-As the project is still in development, there are a few identified bugs:
+As the project is still in development, there maybe a few identified bugs:
 
--Bug while finish project as I am implementing a new feature
 
 ## Plans for the Future
 

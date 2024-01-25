@@ -28,7 +28,7 @@ class database:
             print(f'Error: Unable to create {table_name} table. {e}')
             return 400
 
-    def remove_project(identifier, project, self):
+    def remove_project(self, identifier, project):
         print('Removing project from database...')
     
             # Move the project to the finished projects table
