@@ -1,4 +1,6 @@
-
+"""
+This module is used as an entry for the project
+"""
 
 import sqlite3
 from sys import argv
@@ -19,6 +21,12 @@ cursor = connection.cursor()
 
 
 def help_command():
+    """
+    defines the help command, when calls it outputs all useable commands
+
+    No args
+
+    """
     print("""
         List of available commands:
 
@@ -52,6 +60,12 @@ def help_command():
     """)
 
 def todo_command():
+    """
+    Todo commands shows user all current projects when called
+
+    No args
+
+    """
     print('Viewing existing projects...')
     try:
         cursor.execute('SELECT * FROM projects')
@@ -63,6 +77,9 @@ def todo_command():
     sys.exit()
 
 def startup():
+    """
+    Startup function prints out the logo when project starts
+    """
     print('''
            **********   *******   *******     *******    |
           /////**///   **/////** /**////**   **/////**   |   TODO APP
@@ -76,6 +93,10 @@ def startup():
 
 
 def main():
+    """
+    main function
+    called by todo.sh script
+    """
     startup()
 
     full_command = ' '.join(argv[1:])    

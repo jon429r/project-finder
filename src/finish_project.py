@@ -1,9 +1,17 @@
+"""
+Module defines several functions for the finish command
+"""
+
 import sqlite3
-from database import database as dataclass
 import sys
 from sys import argv
 
+from database import database as dataclass
+
 class finished_project:
+    """
+    class hosts multiple functions for finish command
+    """
     def __init__(self):
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
@@ -11,6 +19,12 @@ class finished_project:
 
 
     def command(self, user_input):
+        """
+        command function
+
+        @args -- user_input
+
+        """
         print('Finishing project...')
         parsed_input = user_input.split(' ')
         if parsed_input[1] == '-id':
@@ -21,7 +35,6 @@ class finished_project:
                 print(info)
             else:
                 print("Project not found.")
-                return 400
 
             print('Please confirm the details above are correct.')
             confirm = False
@@ -29,18 +42,14 @@ class finished_project:
                 confirm = input('Y/N')
 
                 if confirm == 'Y':
-                    from database import database as dataclass
                     db = dataclass()
                     db.remove_project('id', project_id)
 
                 elif confirm == 'N':
                     print('Canceling project deletion...')
                     print('... Canceled!')
-                    return 400
                 else:
                     print('Invalid input, please try again.')
-                    return 400
-                
 
         project_name = argv[2]
         project_info = self.db.get_project_info('name', project_name)
@@ -49,7 +58,6 @@ class finished_project:
             print(info)
         else:
             print("Project not found.")
-            return 400
 
         print('Please confirm the details above are correct.')
         confirm = False
@@ -58,12 +66,9 @@ class finished_project:
 
             if confirm == 'Y':
                 self.db.remove_project('name', project_name)
-                return 200
-
             elif confirm == 'N':
                 print('Canceling project deletion...')
                 print('... Canceled!')
-                return 400
             else:
                 print('Invalid input, please try again.')
             sys.exit()

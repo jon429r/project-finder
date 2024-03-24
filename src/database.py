@@ -1,15 +1,26 @@
+"""
+
+"""
+
 import sqlite3
 
 class database:
+    """
+    database class
+    """
     def __init__(self, db_name='database.db'):
-        """Initialize the database and create the 'projects' table if it doesn't exist."""
+        """
+        Initialize the database and create the 'projects' table if it doesn't exist.
+        """
         self.connection = sqlite3.connect(db_name)
         self.cursor = self.connection.cursor()
         self.create_table('projects')
         self.create_table('finished_projects')
 
     def new_project(self, name, directory, link):
-        """Add a new project to the 'projects' table."""
+        """
+        Add a new project to the 'projects' table.
+        """
         print('Adding project to database...')
         try:
             self.cursor.execute('INSERT INTO projects (name, directory, link) VALUES (?, ?, ?)', (name, directory, link))
@@ -20,7 +31,9 @@ class database:
 
 
     def create_table(self, table_name):
-        """Create a table if it doesn't exist."""
+        """
+        Create a table if it doesn't exist.
+        """
         try:
             self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} \
                     (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
@@ -29,8 +42,10 @@ class database:
             return 400
 
     def remove_project(self, identifier, project):
+        """
+        removes project from database
+        """
         print('Removing project from database...')
-    
             # Move the project to the finished projects table
         try:
             self.cursor.execute(
@@ -41,16 +56,18 @@ class database:
                 WHERE {identifier} = ?
                 """, (project,)
             )
-            self.cursor.execute(f"""DELETE FROM projects 
+            self.cursor.execute(f"""DELETE FROM projects
                                 WHERE {identifier} = ?""", (project,))
             self.connection.commit()
             print('... done!')
         except sqlite3.IntegrityError as e:
             print(f'Error: Unable to remove project to database. {e}')
             return 400
-        
 
     def get_project_info(self, idenifier, project):
+        """
+        gets project from database
+        """
         if idenifier == 'name':
             try:
                 self.cursor.execute(f"""SELECT * 
@@ -70,3 +87,4 @@ class database:
             except:
                 print('Error: Unable to get project info.')
                 return 400
+
