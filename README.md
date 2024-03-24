@@ -15,6 +15,7 @@ This application is built using an SQLite database to store project details, wit
 - Clone the repository: https://github.com/jon429r/project-finder.git
 - install python if version is less than 3.7 using the provided script 'install_python3.bash'.
 - Do this by running chmod +x ./install_python.bash && ./install_python.bash
+- Setup the Bash and zshell environment  by running chmod +x setup_env.sh && ./setup_env.sh
 - then run the code with the command 'python3 main.py'
 
 ## Bugs
