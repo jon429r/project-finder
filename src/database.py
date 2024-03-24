@@ -1,16 +1,18 @@
 """
-
+This module provides a simple interface for interacting with a SQLite database.
 """
 
 import sqlite3
 
-class database:
+class Database:
     """
-    database class
+    This class provides a simple interface for interacting with a SQLite database. 
     """
     def __init__(self, db_name='database.db'):
         """
         Initialize the database and create the 'projects' table if it doesn't exist.
+
+        :param db_name: The name of the SQLite database file.
         """
         self.connection = sqlite3.connect(db_name)
         self.cursor = self.connection.cursor()
@@ -20,6 +22,10 @@ class database:
     def new_project(self, name, directory, link):
         """
         Add a new project to the 'projects' table.
+
+        :param name: The name of the project.
+        :param directory: The directory of the project.
+        :param link: The link to the project.
         """
         print('Adding project to database...')
         try:
@@ -27,23 +33,27 @@ class database:
             self.connection.commit()
         except sqlite3.IntegrityError as e:
             print(f'Error: Unable to add project to database. {e}')
-            return 400
 
 
     def create_table(self, table_name):
         """
         Create a table if it doesn't exist.
+
+        :param table_name: The name of the table to create.
         """
         try:
             self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} \
                     (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
         except sqlite3.OperationalError as e:
             print(f'Error: Unable to create {table_name} table. {e}')
-            return 400
 
     def remove_project(self, identifier, project):
         """
-        removes project from database
+        Remove a project from the 'projects' table.
+
+        :param identifier: The identifier to use to remove the project (e.g. 'id' or 'name').
+        :param project: The value of the identifier.
+
         """
         print('Removing project from database...')
             # Move the project to the finished projects table
@@ -62,11 +72,13 @@ class database:
             print('... done!')
         except sqlite3.IntegrityError as e:
             print(f'Error: Unable to remove project to database. {e}')
-            return 400
 
     def get_project_info(self, idenifier, project):
         """
-        gets project from database
+        Get information about a project from the 'projects' table.
+
+        :param idenifier: The identifier to use to get the project info (e.g. 'id' or 'name').
+        :param project: The value of the identifier.
         """
         if idenifier == 'name':
             try:
@@ -76,7 +88,6 @@ class database:
                 return self.cursor.fetchone()
             except:
                 print('Error: Unable to get project info.')
-                return 400
 
         if idenifier == 'id':
             try:
@@ -86,5 +97,5 @@ class database:
                 return self.cursor.fetchone()
             except:
                 print('Error: Unable to get project info.')
-                return 400
 
+        return None

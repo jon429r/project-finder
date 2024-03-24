@@ -1,16 +1,18 @@
 """
-Module defines several functions for the finish command
+finish_project.py
+This module contains the class for the finish command.
 """
 
 import sqlite3
 import sys
 from sys import argv
 
-from database import database as dataclass
+from database import Database as dataclass
 
-class finished_project:
+class FinishedProject:
     """
-    class hosts multiple functions for finish command
+    This class provides the functionality to finish a project.
+
     """
     def __init__(self):
         self.connection = sqlite3.connect('database.db')
@@ -22,7 +24,7 @@ class finished_project:
         """
         command function
 
-        @args -- user_input
+        :param user_input: The user input to parse and execute.
 
         """
         print('Finishing project...')
@@ -72,3 +74,9 @@ class finished_project:
             else:
                 print('Invalid input, please try again.')
             sys.exit()
+
+    def helper(self):
+        """
+        Helper function
+        """
+        pass

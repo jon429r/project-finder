@@ -1,14 +1,27 @@
+"""
+This file is responsible for creating a new project in the database.
+"""
+
 import sqlite3
 from sys import argv
 import sys
 
-class new_project:
+from database import Database as dataclass
+
+class NewProject:
+    """
+    This class provides the functionality to create a new project.
+    """
     def __init__(self):
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
-        
+
     def command(self, cmd):
-        from database import database as dataclass
+        """
+        command function
+
+        :param cmd: The user input to parse and execute.
+        """
         db = dataclass()
         print('Creating a new project...')
         try:
@@ -18,8 +31,7 @@ class new_project:
             return 400
 
         project_name, working_directory, project_link = argv[2], argv[3], argv[4]
-     
-        if project_name == None:
+        if project_name is None:
             print('Error: Please specify a project name.')
             return
 
@@ -38,7 +50,7 @@ class new_project:
 
         print('Please confirm the details above are correct.')
         confirm = False;
-        while confirm == False:
+        while confirm is False:
             confirmation = input('Y/N')
 
             if confirmation == 'Y':
@@ -60,4 +72,8 @@ class new_project:
                 print('Invalid input, please try again.')
         sys.exit()
 
-
+    def helper(self):
+        """
+        helper function
+        """
+        pass

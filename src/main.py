@@ -7,9 +7,9 @@ from sys import argv
 import sys
 
 import tabulate
-from open_project import open as open
-from new_project import new_project as np
-from finish_project import finished_project as fp
+from open_project import OpenProject as open
+from new_project import NewProject as np
+from finish_project import FinishedProject as fp
 from colorama import Fore
 
 print('Welcome to the project manager!')
@@ -22,9 +22,7 @@ cursor = connection.cursor()
 
 def help_command():
     """
-    defines the help command, when calls it outputs all useable commands
-
-    No args
+    Help command displays all available commands to the user
 
     """
     print("""
@@ -99,7 +97,7 @@ def main():
     """
     startup()
 
-    full_command = ' '.join(argv[1:])    
+    full_command = ' '.join(argv[1:])
 
     exit = False
     while not exit:
