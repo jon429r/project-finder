@@ -3,10 +3,13 @@ import os
 import sys
 from sys import argv
 
+from database import database as dataclass
+
 class open:
     def __init__(self):
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
+        self.db = dataclass()
         
     def command(self, user_input):
         ##user can open a project using id or name
@@ -128,17 +131,19 @@ class open:
         print('done...!')
         sys.exit()
 
-    def in_code_editor(self, identifier, project_id):
+    def in_code_editor(self, identifier, project):
         try:
-            self.cursor.execute(f'SELECT * FROM projects WHERE {identifier}= ?', (project_id,))
+               project = self.db.get_project_info("name", argv[2])
         except:
             print('Error: Finding project in database.')
-        project = self.cursor.fetchone()
         print(f'Opening project {project[1]}...')
         print(f'Working directory: {project[2]}')
         print(f'Project link: {project[3]}')
         os.system(f'cd')
+        
         try:
+            dir = '~/' + project[2]
+            print(f'dir: {project[2]}')
             os.system(f'nvim {project[2]}')
         except:
             print('Error: Unable to open project in neovim.')

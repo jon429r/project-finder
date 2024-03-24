@@ -59,7 +59,7 @@ if [ "$command" = "new" ]; then
     fi
 
 
-    python3 /Users/jonathanday/Documents/GitHub/Project-finder/src/main.py "$command" "$project_name" "$working_directory" "$project_link"
+    python3 src/main.py "$command" "$project_name" "$working_directory" "$project_link"
     echo "Executing new command..."
     exit 0
 
@@ -67,7 +67,7 @@ elif [ "$command" = "todo" ]; then
     if [ -z "$command" ]; then
         todo_cmd_usage
     fi
-    python3 /Users/jonathanday/Documents/GitHub/Project-finder/src/main.py "$command"
+    python3 src/main.py "$command"
     echo "Executing todo command..."
     exit 0
 
@@ -75,7 +75,7 @@ elif [ "$command" = "finish" ]; then
     if  [ -z "$project_name" ]; then
         finish_cmd_usage
     fi
-    python3 /Users/jonathanday/Documents/GitHub/Project-finder/src/main.py "$command" "$project_name"
+    python3 src/main.py "$command" "$project_name"
     echo "Executing finish command..."
     exit 0
 
@@ -83,7 +83,7 @@ elif [ "$command" = "open" ]; then
     if [ -z "$project_name" ]; then
         open_cmd_usage
     fi
-    python3 /Users/jonathanday/Documents/GitHub/Project-finder/src/main.py "$command" "$project_name"
+    python3 src/main.py "$command" "$project_name"
     echo "Executing open command..."
     exit 0
 
@@ -100,5 +100,5 @@ fi
 # source ~/.bash_profile > to reload profiles
 # source ~/.zshrc
 #
-python3 /Users/jonathanday/Documents/GitHub/Project-finder/src/main.py "$command" "$project_name" "$working_directory" "$project_link"
+python3 src/main.py "$command" "$project_name" "$working_directory" "$project_link"
 
