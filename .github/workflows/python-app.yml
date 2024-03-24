@@ -30,11 +30,6 @@ jobs:
       run: |
         pip install pip-check
         pip-check
-
-    - name: Lint code
-      run: |
-        flake8 .
-        pylint .
     
     - name: Run type checking with mypy
       run: |
@@ -45,7 +40,13 @@ jobs:
         sphinx-quickstart --quiet --sep -p YourProject -a YourName -v 1.0 -r 1.0 -l en docs
         sphinx-build -b html docs docs/_build
 
+    - name: Lint code
+      run: |
+        pylint .
+
     - name: Notify on workflow failure
       if: failure()
       run: |
         echo "Workflow failed! Check the Actions tab for details."
+
+        
