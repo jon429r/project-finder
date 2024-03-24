@@ -1,6 +1,9 @@
 
 
 import sqlite3
+from sys import argv
+import sys
+
 import tabulate
 from open_project import open as open
 from new_project import new_project as np
@@ -57,6 +60,7 @@ def todo_command():
         print('... done!')
     except:
         print('No projects found, please create a new project.')
+    sys.exit()
 
 def startup():
     print('''
@@ -74,33 +78,37 @@ def startup():
 def main():
     startup()
 
+    full_command = ' '.join(argv[1:])    
+
     exit = False
     while not exit:
-        user_input = input(Fore.RED + 'TODO: ' + Fore.RESET)
+        user_input = Fore.RED + ''.join('Todo: ' + full_command) + Fore.RESET
+        print(user_input)
 
-        match user_input.split()[0]:
+        match argv[1]:
             case 'help' | '?':
                 help_command()
+                sys.exit()
             case 'new':
-                np.command(user_input)
+                np.command(full_command)
+                sys.exit()
             case 'todo':
                 todo_command()
+                sys.exit()
             case 'finish':
-                fp.command(user_input)
+                fp.command(full_command)
+                sys.exit()
             case 'open':
-                open.command(user_input)
+                open.command(full_command)
+                sys.exit()
             case 'exit':
                 exit = True
             case _:
                 print('Invalid command, please try again. Type "help" for a list of commands.')
+                sys.exit()
 
     print('Come again!')
-
-np = np()
-open = open()
-fp = fp()
-
-main()
+    sys.exit()
 
 np = np()
 open = open()

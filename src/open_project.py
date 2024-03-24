@@ -1,11 +1,13 @@
 import sqlite3
 import os
+import sys
+from sys import argv
 
 class open:
     def __init__(self):
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
-
+        
     def command(self, user_input):
         ##user can open a project using id or name
         print('Opening project...')
@@ -24,12 +26,15 @@ class open:
                         print('Where would you like to open the project?')
                         print('1. Finder')
                         print('2. Safari')
+                        print('3. Code Editor')
                         open_location = -1
                         open_location = input('Enter a number or Q to cancel: ')
                         if open_location == '1':
                             self.in_finder('id', project_id)
                         elif open_location == '2':
                             self.in_safari('id', project_id)
+                        elif open_location == '3':
+                            self.in_code_editor('id', project_id)
                         elif open_location.lower() == 'q':
                             confirm = 'N'
                             print('Canceling project opening...')
@@ -46,45 +51,50 @@ class open:
                     return 400
                 else:
                     print('Invalid input, please try again.')
+            sys.exit()
 
-        elif parsed_input[1] == '-name':
-            project_name = parsed_input[2]
-            project_id = self.cursor.execute('SELECT id FROM projects WHERE name=?', (project_name,))
-            print(f'Project name: {project_name}')
-            print('Please confirm the details above are correct.')
-            confirm = False;
-            while confirm == False:
-                confirm = input('Y/N')
+        project_name = argv[2]
+        project_id = self.cursor.execute('SELECT id FROM projects WHERE name=?', (project_name,))
+        print(f'Project name: {project_name}')
+        print('Please confirm the details above are correct.')
+        confirm = False;
+        while confirm == False:
+            confirm = input('Y/N')
 
-                if confirm == 'Y':
-                    choice = False
-                    while choice is False:
-                        print('Where would you like to open the project?')
-                        print('1. Finder')
-                        print('2. Safari')
-                        open_location = -1
-                        open_location = input('Enter a number or Q to cancel: ')
-                        if open_location == '1':
-                            self.in_finder('name', project_id)
-                        elif open_location == '2':
-                            self.in_safari('name', project_id)
-                        elif open_location.lower() == 'q':
-                            confirm = 'N'
-                            print('Canceling project opening...')
-                            return 400
-                        else:
-                            print('Invalid input, please try again.')  
+            if confirm == 'Y':
+                choice = False
+                while choice is False:
+                    print('Where would you like to open the project?')
+                    print('1. Finder')
+                    print('2. Safari')
+                    print('3. Code Editor')
+                    open_location = -1
+                    open_location = input('Enter a number or Q to cancel: ')
+                    if open_location == '1':
+                        self.in_finder('name', project_id)
+                    elif open_location == '2':
+                        self.in_safari('name', project_id)
+                    elif open_location == '3':
+                        self.in_code_editor('name', project_id)
+                    elif open_location.lower() == 'q':
+                        confirm = 'N'
+                        print('Canceling project opening...')
+                        return 400
+                    else:
+                        print('Invalid input, please try again.') 
 
-                elif confirm == 'N':
-                    print('Canceling project opening...')
-                    print('... Canceled!')
-                    confirm = True
-                    return 400
-                else:
-                    print('Invalid input, please try again.')
+            elif confirm == 'N':
+                print('Canceling project opening...')
+                print('... Canceled!')
+                confirm = True
+                return 400
+            else:
+                print('Invalid input, please try again.')
+            sys.exit()
 
     def in_safari(self, identifier, project_id):
         try:
+            #get project info from database
             self.cursor.execute(f'SELECT * FROM projects WHERE {identifier} = ?', (project_id,))
             project = self.cursor.fetchone()
 
@@ -100,6 +110,7 @@ class open:
         except Exception as e:
             print(f'Error: {e}')
             return 400
+        sys.exit()
 
     def in_finder(self, identifier, project_id):
         self.cursor.execute(f'SELECT * FROM projects WHERE {identifier} = ?', (project_id,))
@@ -115,4 +126,23 @@ class open:
             return 400
 
         print('done...!')
+        sys.exit()
+
+    def in_code_editor(self, identifier, project_id):
+        try:
+            self.cursor.execute(f'SELECT * FROM projects WHERE {identifier}= ?', (project_id,))
+        except:
+            print('Error: Finding project in database.')
+        project = self.cursor.fetchone()
+        print(f'Opening project {project[1]}...')
+        print(f'Working directory: {project[2]}')
+        print(f'Project link: {project[3]}')
+        os.system(f'cd')
+        try:
+            os.system(f'nvim {project[2]}')
+        except:
+            print('Error: Unable to open project in neovim.')
+            return 400
+        sys.exit()
+
 
