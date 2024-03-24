@@ -15,6 +15,7 @@ This application is built using an SQLite database to store project details, wit
 - Clone the repository: https://github.com/jon429r/project-finder.git
 - install python if version is less than 3.7 using the provided script 'install_python3.bash'.
 - Do this by running chmod +x ./install_python.bash && ./install_python.bash
+- Setup the Bash and zshell environment  by running chmod +x setup_env.sh && ./setup_env.sh
 - then run the code with the command 'python3 main.py'
 
 ## Bugs
@@ -35,15 +36,13 @@ Future plans for Project-Finder include:
 
 As this is an application used through the Mac Terminal here are the commands for the application (I do have plans for a GUI)
 
-    1. Create a new project: new -name <"project_name"> -dir <"working_directory"> 
+    1. Create a new project: todo -cmd new -name <"project_name"> -dir <"working_directory"> 
     please insert the whole directory path starting with a '/'
     Additional arguments: 
     -link <"project_link">
-    2. View existing projects: todo 
-    3. Finished an existing project: finish -name <project_name> 
-    You can also remove a project by typing finish -id <project_id> 
-    4. Open an existing project: open -name <project_name> 
-    You can also open a project by typing open -id <project_id> 
+    2. View existing projects: todo -cmd todo
+    3. Finished an existing project: todo -cmd finish -name <project_name> 
+    4. Open an existing project: todo -cmd open -name <project_name> 
     5. Exit 
     6. Help 
 
