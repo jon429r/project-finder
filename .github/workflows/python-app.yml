@@ -31,10 +31,10 @@ jobs:
         pip install pip-check
         pip-check
 
-    - name: Generate documentation
-      run: |
-        sphinx-quickstart --quiet --sep -p YourProject -a YourName -v 1.0 -r 1.0 -l en docs
-        sphinx-build -b html docs docs/_build
+    #- name: Generate documentation
+    #  run: |
+    #    sphinx-quickstart --quiet --sep -p YourProject -a YourName -v 1.0 -r 1.0 -l en docs
+    #   sphinx-build -b html docs docs/_build
 
     - name: Lint code
       run: |
