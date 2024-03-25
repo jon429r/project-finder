@@ -9,7 +9,7 @@ from sys import argv
 
 from database import Database as dataclass
 
-class Open:
+class OpenProject:
     """
     This class provides the functionality to open a project.
     """
