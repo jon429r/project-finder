@@ -42,9 +42,8 @@ As this is an application used through the Mac Terminal here are the commands fo
     -link <"project_link">
     2. View existing projects: todo -cmd todo
     3. Finished an existing project: todo -cmd finish -name <project_name> 
-    4. Open an existing project: todo -cmd open -name <project_name> 
-    5. Exit 
-    6. Help 
+    4. Open an existing project: todo -cmd open -name <project_name>  
+    6. Todo -cmd Help 
 
 ## Compatibility
 
