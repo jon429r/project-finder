@@ -2,4 +2,5 @@
 .DS_Store
 project/.DS_Store
 project/database.db
+*.db
 *.pyc
