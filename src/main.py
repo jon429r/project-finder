@@ -29,28 +29,37 @@ def help_command():
         List of available commands:
 
         1. Create a new project:
-        new -name <"project_name"> -dir <"working_directory"> -link <"project_link">
+        new --name <"project_name"> --dir <"working_directory"> --link <"project_link">
+        new -n <"project_name"> -d <"working_directory"> -l <"project_link">
         Create a new project with a specified name, working directory, and optional project link.
 
         2. View existing projects:
-        todo
+        todo --cmd todo
+        todo -c todo
         Display a list of existing projects.
 
         3. Finish an existing project:
-        finish -name <project_name>
+        todo --cmd finish --name <project_name>
+        todo -c finish -n <project_name>
+
         Mark an existing project as finished. You can also remove a project using its ID:
-        finish -id <project_id>
+        todo --cmd finish --id <project_id>
 
         4. Open an existing project:
-        open -name <project_name>
+        todo --cmd open --name <project_name>
         Open an existing project by name. Alternatively, you can open a project using its ID:
-        open -id <project_id>
+        todo --cmd open --id <project_id>
+        todo -c open -n <project_name>
+        todo -c open -i <project_id>
+        
 
         5. Exit:
         exit
         Quit the application.
 
         6. Help:
+        todo --cmd help
+        todo -c help
         help
         Display this help message.
 

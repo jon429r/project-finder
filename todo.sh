@@ -46,7 +46,8 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         -h|--help)
-            new_cmd_usage
+            command="help"
+            shift 1
             ;;
         *)
             echo "Unknown option: $1" >&2
@@ -59,6 +60,10 @@ done
 if [ -z "$command" ]; then
     echo "Error: Command is required." >&2
     exit 1
+fi
+
+if [ "$command" = "help" ]; then
+    python3 src/main.py "$command"
 fi
 
 if [ "$command" = "new" ]; then

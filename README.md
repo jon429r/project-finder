@@ -36,20 +36,21 @@ Future plans for Project-Finder include:
 
 As this is an application used through the Mac Terminal here are the commands for the application (I do have plans for a GUI)
 
-    1. Create a new project: todo -cmd new -name <"project_name"> -dir <"working_directory"> 
+    1. Create a new project: todo --cmd new --name <"project_name"> --dir <"working_directory"> 
+    or todo -c new -n <"project_name"> -d <"working_directory"> -l <"project_link">
+    working_directory and link are optional but recommended
     please insert the whole directory path starting with a '/'
-    Additional arguments: 
-    -link <"project_link">
-    2. View existing projects: todo -cmd todo
+    2. View existing projects: todo -cmd todo or todo -c todo
     3. Finished an existing project: todo -cmd finish -name <project_name> 
+    or todo -c finish -n <project_name>
     4. Open an existing project: todo -cmd open -name <project_name> 
-    5. Exit 
-    6. Help 
+    or todo -c open -n <project_name>
+    6. todo -cmd Help or todo -c Help
 
 ## Compatibility
 
-Written and tested in python 3.10.10, on MacOS, Zsh terminal
+Written and tested in python 3.10.10, on MacOS, for MacOS and Linux, Zsh and bash terminal
 
 ## Requirments
 
-sqlite3, python3
+sqlite3, python3, zsh, bash
