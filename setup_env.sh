@@ -12,6 +12,7 @@
 
 # Determine current working directory
 current_directory=$(pwd)
+echo "Current directory: $current_directory"
 
 # Determine paths based on current directory
 todo_script_path="$current_directory/todo.sh"
@@ -22,16 +23,32 @@ zsh_profile_path="$HOME/.zshrc"
 # Step 1: Make the script executable
 chmod +x "$todo_script_path"
 
+echo making todo.sh executable
+
 
 # Step 2: Add the script directory to the PATH in profile file
 echo "export PATH=\"$current_directory:\$PATH\"" >> "$profile_path"
 echo "export PATH=\"$current_directory:\$PATH\"" >> "$zsh_profile_path"
 
+echo adding script to z-shell and bash configuration files
+
 # Step 3: Reload the shell profiles
 source "$profile_path"
+source "$zsh_profile_path"
+
+echo reloading shell profiles with changes
 
 # Step 4: Create a symbolic link to the script
 sudo ln -s "$todo_script_path" "$link_destination_path"
+echo linking script to /usr/local/bin
+
+echo installing pip if it does not exist...
+
+sudo apt-get install python3-pip || sudo apt-get install python-pip
+
+echo installing prerequisites...
+
+pip3 install -r requirements.txt || pip install -r requirements.txt
 
 
 echo "Setup completed successfully."
