@@ -19,14 +19,30 @@ print('Welcome to the project manager!')
 connection = sqlite3.connect(database='database.db')
 cursor = connection.cursor()
 
-
 def help_command():
+    """
+    Less verbose help command
+    """
+    print("""
+
+    list of commands:
+
+    new, todo, finish, open, exit, help
+
+    Short arguements: -n, -d, -l, -c, -i, -v
+    long arguements: --name, --dir, --link, --cmd, --id, --verbose
+
+    for a more verbose manual, add -v or --verbose to the help command
+
+    """)
+
+def help_command_verbose():
     """
     Help command displays all available commands to the user
 
     """
     print("""
-        List of available commands:
+        List of available commands and uses:
 
         1. Create a new project:
         new --name <"project_name"> --dir <"working_directory"> --link <"project_link">
@@ -39,11 +55,9 @@ def help_command():
         Display a list of existing projects.
 
         3. Finish an existing project:
-        todo --cmd finish --name <project_name>
-        todo -c finish -n <project_name>
-
-        Mark an existing project as finished. You can also remove a project using its ID:
-        todo --cmd finish --id <project_id>
+        todo --cmd finish --name <project_name> or --id <project_id>
+        todo -c finish -n <project_name> or -i <project_id>
+        
 
         4. Open an existing project:
         todo --cmd open --name <project_name>
@@ -115,7 +129,10 @@ def main():
 
         match argv[1]:
             case 'help' | '?':
-                help_command()
+                if '-v' in argv:
+                    help_command_verbose()
+                else:
+                    help_command()
                 sys.exit()
             case 'new':
                 np.command(full_command)

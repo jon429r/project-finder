@@ -23,54 +23,25 @@ class OpenProject:
 
         :param user_input: The user input to parse and execute.
         """
-        print('Opening project...')
-        parsed_input = user_input.split(' ')
-        if parsed_input[1] == '-id':
-            project_id = parsed_input[2]
+        if isinstance(argv[2], int):
+            project_id = argv[2]
             print(f'Project ID: {project_id}')
-            print('Please confirm the details above are correct.')
-            confirm, deny = False, False
-            while confirm or deny is False:
-                confirm = input('Y/N')
+        else:
+            project_name = argv[2]
+            self.cursor.execute('SELECT id FROM projects WHERE name=?', (project_name,))
+            project_id = self.cursor.fetchone()[0]
+            print(f'Project ID: {project_id}')
 
-                if confirm == 'Y':
-                    choice = False
-                    while choice is False:
-                        print('Where would you like to open the project?')
-                        print('1. Finder')
-                        print('2. Safari')
-                        print('3. Code Editor')
-                        open_location = -1
-                        open_location = input('Enter a number or Q to cancel: ')
-                        if open_location == '1':
-                            self.in_finder('id', project_id)
-                        elif open_location == '2':
-                            self.in_safari('id', project_id)
-                        elif open_location == '3':
-                            self.in_code_editor('id', project_id)
-                        elif open_location.lower() == 'q':
-                            confirm = 'N'
-                            print('Canceling project opening...')
-                            return 400
-                        else:
-                            print('Invalid input, please try again.')
 
-                    confirm = True
-
-                elif confirm == 'N':
-                    print('Canceling project opening...')
-                    print('... Canceled!')
-                    deny = True
-                    return 400
-                else:
-                    print('Invalid input, please try again.')
+        project_info = self.db.get_project_info('id', project_id)
+        # check to make sure the return is not none
+        if project_info is None:
+            print('Error: Project not found.\n Now exiting...')
             sys.exit()
 
-        project_name = argv[2]
-        project_id = self.cursor.execute('SELECT id FROM projects WHERE name=?', (project_name,))
-        print(f'Project name: {project_name}')
+        print(f'Project Info: {project_info}')
         print('Please confirm the details above are correct.')
-        confirm = False;
+        confirm = False
         while confirm is False:
             confirm = input('Y/N')
 
@@ -83,18 +54,22 @@ class OpenProject:
                     print('3. Code Editor')
                     open_location = -1
                     open_location = input('Enter a number or Q to cancel: ')
-                    if open_location == '1':
-                        self.in_finder('name', project_id)
-                    elif open_location == '2':
-                        self.in_safari('name', project_id)
-                    elif open_location == '3':
-                        self.in_code_editor('name', project_id)
-                    elif open_location.lower() == 'q':
-                        confirm = 'N'
-                        print('Canceling project opening...')
-                        return 400
-                    else:
-                        print('Invalid input, please try again.')
+
+                    #case match statement to open project in specified location
+                    try:
+                        match open_location:
+                            case '1':
+                                self.in_finder('id', project_id)
+                            case '2':
+                                self.in_safari('id', project_id)
+                            case '3':
+                                self.in_code_editor('id', project_id)
+                            case 'q':
+                                print('Canceling operation, closing now...')
+                                sys.exit()
+                    except ValueError as e:
+                        print(f'Invalid input, please try again: {e}')
+
             elif confirm == 'N':
                 print('Canceling project opening...')
                 print('... Canceled!')
@@ -112,17 +87,27 @@ class OpenProject:
         :param project_id: The value of the identifier.
 
         """
+        if isinstance(argv[2], int):
+            project_id = argv[2]
+            print(f'Project ID: {project_id}')
+        else:
+            project_name = argv[2]
+            self.cursor.execute('SELECT id FROM projects WHERE name=?', (project_name,))
+            project_id = self.cursor.fetchone()[0]
+            print(f'Project ID: {project_id}')
+
         try:
             #get project info from database
-            self.cursor.execute(f'SELECT * FROM projects WHERE {identifier} = ?', (project_id,))
-            project = self.cursor.fetchone()
+            project = self.db.get_project_info('id', project_id)
 
             if project:
                 print(f'Opening project {project[1]}...')
                 print(f'Working directory: {project[2]}')
                 print(f'Project link: {project[3]}')
+                project_link = project[3]
 
-                os.system(f'open -a Safari {project[3]}')
+                print('Opening {project_link} in Safari...')
+                os.system(f'open -a Safari {project_link}')
                 print('... done!')
             else:
                 print('Error: Project not found.')
@@ -144,9 +129,17 @@ class OpenProject:
         print(f'Opening project {project[1]}...')
         print(f'Working directory: {project[2]}')
         print(f'Project link: {project[3]}')
-        os.system(f'cd')
-        try:
-            os.system(f'open {project[2]}')
+
+        
+        working_dir = project[2]
+        if working_dir.startswith('/'):
+            working_dir = working_dir.join('~')
+        else:
+            working_dir = working_dir.join('~/')
+
+        print(f'Opening {working_dir} in Finder...')
+        try: 
+            os.system(f'open {working_dir}')
         except:
             print('Error: Unable to open project dir.')
             return 400
@@ -162,13 +155,15 @@ class OpenProject:
         :param project: The value of the identifier.
         """
         try:
-               project = self.db.get_project_info("name", argv[2])
+               project = self.db.get_project_info(identifier, argv[2])
         except:
             print('Error: Finding project in database.')
         print(f'Opening project {project[1]}...')
         print(f'Working directory: {project[2]}')
         print(f'Project link: {project[3]}')
+
         os.system(f'cd')
+        print(f'Opening {project[2]} in default code editor...')
         try:
             dir = '~/' + project[2]
             print(f'dir: {project[2]}')

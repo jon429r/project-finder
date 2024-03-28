@@ -13,13 +13,13 @@ todo_cmd_usage() {
     exit 1
 }
 finish_cmd_usage() {
-    echo "Usage: $0 -cmd <command> -name <project_name>"
-    echo "Short options: $0 -c <command> -n <project_name>"
+    echo "Usage: $0 -cmd <command> -name <project_name> or -id <project_id>"
+    echo "Short options: $0 -c <command> -n <project_name> or -i <project_id"
     exit 1
 }
 open_cmd_usage() {
-    echo "Usage: $0 -cmd <command> -name <project_name>"
-    echo "Short options: $0 -c <command> -n <project_name>"
+    echo "Usage: $0 -cmd <command> -name <project_name> or -id <project_id>"
+    echo "Short options: $0 -c <command> -n <project_name> or -i <project_id"
     exit 1
 }
 
@@ -31,6 +31,10 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         -c|--cmd)
             command="$2"
+            shift 2
+            ;;
+        -i|--id)
+            project_id="$2"
             shift 2
             ;;
         -n|--name)
@@ -45,8 +49,12 @@ while [[ $# -gt 0 ]]; do
             project_link="$2"
             shift 2
             ;;
-        -h|--help)
+        -h|--help|?)
             command="help"
+            shift 1
+            ;;
+        -v|--verbose)
+            verbose="True"
             shift 1
             ;;
         *)
@@ -56,36 +64,59 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Check if all required options are provided
+# Check if command is provided
 if [ -z "$command" ]; then
     echo "Error: Command is required." >&2
     exit 1
 fi
 
 if [ "$command" = "help" ]; then
-    python3 src/main.py "$command"
-fi
+    if [ "$verbose" = "True" ]; then
+        python3 src/main.py "$command" -v
+    else
+        python3 src/main.py "$command"
+    fi
 
-if [ "$command" = "new" ]; then
+elif [ "$command" = "new" ]; then
+    # Check if all required options for new command are provided
     if [ "$project_name" = "None" ] || [ "$working_directory" = "None" ] || [ "$project_link" = "None" ]; then
         new_cmd_usage
+        exit 1
     fi
     python3 src/main.py "$command" "$project_name" "$working_directory" "$project_link"
     echo "Executing new command..."
+
 elif [ "$command" = "todo" ]; then
     python3 src/main.py "$command"
     echo "Executing todo command..."
+
 elif [ "$command" = "finish" ]; then
-    if [ "$project_name" = "None" ]; then
+    # Check if either project_name or project_id is provided
+    if [ "$project_name" = "None" ] && [ "$project_id" = "None" ]; then
         finish_cmd_usage
+        exit 1
     fi
-    python3 src/main.py "$command" "$project_name"
-    echo "Executing finish command..."
+
+    if [ "$project_id" = "None" ]; then
+        python3 src/main.py "$command" "$project_name"
+        echo "Executing finish command with project name..."
+    else
+        python3 src/main.py "$command" "$project_id"
+        echo "Executing finish command with project id..."
+    fi
+
 elif [ "$command" = "open" ]; then
+    # Check if project_name is provided
     if [ "$project_name" = "None" ]; then
         open_cmd_usage
+        exit 1
     fi
+
+    # Execute open command
     python3 src/main.py "$command" "$project_name"
     echo "Executing open command..."
+else
+    echo "Error: Unknown command '$command'." >&2
+    exit 1
 fi
 
