@@ -4,3 +4,5 @@ project/.DS_Store
 project/database.db
 *.db
 *.pyc
+config/user.ini
+src/auth/logs/todo.log

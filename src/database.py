@@ -1,14 +1,19 @@
-"""
-This module provides a simple interface for interacting with a SQLite database.
-"""
+"""This module provides an interface for interacting with SQLite database."""
 
 import sqlite3
+import logging
+
+from Logger import Logger
+
+
+class projectNotFound(Exception):
+    """Raised when project is not found in the database."""
+
 
 class Database:
-    """
-    This class provides a simple interface for interacting with a SQLite database. 
-    """
-    def __init__(self, db_name='database.db'):
+    """This class provides an interface for interacting with SQLite database."""
+
+    def __init__(self, db_name="database.db"):
         """
         Initialize the database and create the 'projects' table if it doesn't exist.
 
@@ -16,9 +21,10 @@ class Database:
         """
         self.connection = sqlite3.connect(db_name)
         self.cursor = self.connection.cursor()
-        self.create_table('projects')
-        self.create_table('finished_projects')
+        self.create_table("projects")
+        self.create_table("finished_projects")
 
+    @Logger.log_action("Adding project to database", severity=logging.INFO)
     def new_project(self, name, directory, link):
         """
         Add a new project to the 'projects' table.
@@ -27,14 +33,17 @@ class Database:
         :param directory: The directory of the project.
         :param link: The link to the project.
         """
-        print('Adding project to database...')
+        print("Adding project to database...")
         try:
-            self.cursor.execute('INSERT INTO projects (name, directory, link) VALUES (?, ?, ?)', (name, directory, link))
+            self.cursor.execute(
+                "INSERT INTO projects (name, directory, link) VALUES (?, ?, ?)",
+                (name, directory, link),
+            )
             self.connection.commit()
         except sqlite3.IntegrityError as e:
-            print(f'Error: Unable to add project to database. {e}')
+            print(f"Error: Unable to add project to database. {e}")
 
-
+    @Logger.log_action("Creating new table for projects", severity=logging.CRITICAL)
     def create_table(self, table_name):
         """
         Create a table if it doesn't exist.
@@ -42,11 +51,14 @@ class Database:
         :param table_name: The name of the table to create.
         """
         try:
-            self.cursor.execute(f'CREATE TABLE IF NOT EXISTS {table_name} \
-                    (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)')
+            self.cursor.execute(
+                f"CREATE TABLE IF NOT EXISTS {table_name} \
+                    (id INTEGER PRIMARY KEY, name TEXT, directory TEXT, link TEXT)"
+            )
         except sqlite3.OperationalError as e:
-            print(f'Error: Unable to create {table_name} table. {e}')
+            print(f"Error: Unable to create {table_name} table. {e}")
 
+    @Logger.log_action("Removing project from database", severity=logging.INFO)
     def remove_project(self, identifier, project):
         """
         Remove a project from the 'projects' table.
@@ -55,8 +67,8 @@ class Database:
         :param project: The value of the identifier.
 
         """
-        print('Removing project from database...')
-            # Move the project to the finished projects table
+        print("Removing project from database...")
+        # Move the project to the finished projects table
         try:
             self.cursor.execute(
                 f"""
@@ -64,15 +76,20 @@ class Database:
                 SELECT name, directory, link 
                 FROM projects 
                 WHERE {identifier} = ?
-                """, (project,)
+                """,
+                (project,),
             )
-            self.cursor.execute(f"""DELETE FROM projects
-                                WHERE {identifier} = ?""", (project,))
+            self.cursor.execute(
+                f"""DELETE FROM projects
+                                WHERE {identifier} = ?""",
+                (project,),
+            )
             self.connection.commit()
-            print('... done!')
+            print("... done!")
         except sqlite3.IntegrityError as e:
-            print(f'Error: Unable to remove project to database. {e}')
+            print(f"Error: Unable to remove project to database. {e}")
 
+    @Logger.log_action("Getting project info from database", severity=logging.INFO)    
     def get_project_info(self, idenifier, project):
         """
         Get information about a project from the 'projects' table.
@@ -80,22 +97,28 @@ class Database:
         :param idenifier: The identifier to use to get the project info (e.g. 'id' or 'name').
         :param project: The value of the identifier.
         """
-        if idenifier == 'name':
+        if idenifier == "name":
             try:
-                self.cursor.execute(f"""SELECT * 
-                                    FROM projects 
-                                    WHERE name =?""", (project,))
+                self.cursor.execute(
+                    """SELECT *
+                                    FROM projects
+                                    WHERE name =?""",
+                    (project,),
+                )
                 return self.cursor.fetchone()
-            except:
-                print('Error: Unable to get project info.')
+            except projectNotFound:
+                print("Error: Unable to get project info.")
 
-        if idenifier == 'id':
+        if idenifier == "id":
             try:
-                self.cursor.execute(f"""SELECT * 
-                                    FROM projects 
-                                    WHERE id =?""", (project,))
+                self.cursor.execute(
+                    """SELECT *
+                                    FROM projects
+                                    WHERE id =?""",
+                    (project,),
+                )
                 return self.cursor.fetchone()
-            except:
-                print('Error: Unable to get project info.')
+            except projectNotFound:
+                print("ProjectNotFound: Unable to get project info.")
 
         return None

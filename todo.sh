@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Usage message
@@ -64,6 +63,11 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+script_dir="$(dirname "$(readlink -f "$0")")"
+
+# Determine the path to the Python script
+python_script="$script_dir/src/main.py"
+
 # Check if command is provided
 if [ -z "$command" ]; then
     echo "Error: Command is required." >&2
@@ -72,9 +76,9 @@ fi
 
 if [ "$command" = "help" ]; then
     if [ "$verbose" = "True" ]; then
-        python3 src/main.py "$command" -v
+        python3 "/src/main.py" "$command" -v
     else
-        python3 src/main.py "$command"
+        python3 "/src/main.py"  "$command" 
     fi
 
 elif [ "$command" = "new" ]; then
@@ -83,11 +87,11 @@ elif [ "$command" = "new" ]; then
         new_cmd_usage
         exit 1
     fi
-    python3 src/main.py "$command" "$project_name" "$working_directory" "$project_link"
+    python3 "$python_script" "$command" "$project_name" "$working_directory" "$project_link"
     echo "Executing new command..."
 
 elif [ "$command" = "todo" ]; then
-    python3 src/main.py "$command"
+    python3 "$python_script"  "$command"
     echo "Executing todo command..."
 
 elif [ "$command" = "finish" ]; then
@@ -98,10 +102,10 @@ elif [ "$command" = "finish" ]; then
     fi
 
     if [ "$project_id" = "None" ]; then
-        python3 src/main.py "$command" "$project_name"
+        python3 "$python_script" "$command" "$project_name"
         echo "Executing finish command with project name..."
     else
-        python3 src/main.py "$command" "$project_id"
+        python3 "$python_script" "$command" "$project_id"
         echo "Executing finish command with project id..."
     fi
 
@@ -113,7 +117,7 @@ elif [ "$command" = "open" ]; then
     fi
 
     # Execute open command
-    python3 src/main.py "$command" "$project_name"
+    python3 "$python_script" "$command" "$project_name"
     echo "Executing open command..."
 else
     echo "Error: Unknown command '$command'." >&2

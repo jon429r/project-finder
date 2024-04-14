@@ -50,5 +50,8 @@ echo installing prerequisites...
 
 pip3 install -r requirements.txt || pip install -r requirements.txt
 
+echo creating log file
+mkdir "$current_directory/src/auth/logs/"
+touch "$current_directory/src/auth/logs/todo.log"
 
 echo "Setup completed successfully."

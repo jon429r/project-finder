@@ -1,1 +1,3 @@
-from .command_parser import input_parser
+"""init file for misc classes"""
+
+from . import Logger

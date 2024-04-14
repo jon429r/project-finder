@@ -1,3 +1,13 @@
+#Project
 tabulate
 colorama
 pylint
+configparser
+cryptography
+
+#Database
+pyodbc
+fastapi
+uvicorn[standard]
+pydantic
+azure-identity

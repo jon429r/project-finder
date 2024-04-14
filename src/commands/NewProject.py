@@ -4,7 +4,6 @@ This file is responsible for creating a new project in the database.
 
 import sqlite3
 from sys import argv
-import sys
 
 from database import Database as dataclass
 
@@ -16,7 +15,7 @@ class NewProject:
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
 
-    def command(self, cmd):
+    def new_project(self):
         """
         command function
 
@@ -70,7 +69,7 @@ class NewProject:
                 confirm = True
             else:
                 print('Invalid input, please try again.')
-        sys.exit()
+        return
 
     def helper(self):
         """
