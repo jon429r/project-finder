@@ -8,11 +8,13 @@ import tabulate
 from colorama import Fore
 import configparser as config
 import datetime
+import logging
 
 from commands import OpenProject, FinishProject, NewProject, LogProject
 import auth
 from auth import signup
 import os
+from Logger import Logger
 
 
 def startup():
@@ -45,31 +47,55 @@ config_parser.read(config_file_path)
 SIGNUP = False
 
 # Sign up if the user needs to sign up
+print("last login pre login", config_parser.get('LastLogin', 'last_login'))
 if config_parser.get('LastLogin', 'last_login') == '0000-00-00 00:00:00':
     SIGNUP = True
+else:
+    SIGNUP = False
 
-if signup:
+print('Signup var', SIGNUP)
+
+if SIGNUP:
     signup.signup_main()
 
-# check the last login time and ask for login username and password if it
-# has been more than 1 day
-# else, ask for the pin
+# Assuming last_login is read as a string from config_parser
+last_login_str = config_parser['LastLogin']['last_login']
+print(last_login_str)
 
-# compare last login time with current time
-last_login = config_parser['LastLogin']['last_login']
-last_login = datetime.datetime.strptime(last_login, "%Y-%m-%d %H:%M:%S")
-current_time = datetime.datetime.now()
-time_difference = current_time - last_login
-if time_difference.days > 1:
-    auth.login()
+new_login_time = datetime.datetime.now()
+print(new_login_time)
+
+# Attempt to parse last_login_str as a datetime object
+try:
+    last_login = datetime.datetime.strptime(last_login_str, "%Y-%m-%d %H:%M:%S")
+except ValueError:
+    # Handle the case where last_login_str is not a valid datetime string
+    print("Error: Invalid last login datetime format")
+    # Set a default value for last_login or handle it based on your application logic
+    last_login = None
+
+if last_login is not None:
+    current_time = datetime.datetime.now()
+    time_difference = current_time - last_login
+    print("current time", current_time)
+    print("time difference", time_difference)
+    if time_difference.days > 1:
+        auth.login()
+    else:
+        auth.login_pin()
 else:
-    auth.login_pin()
+    # Handle the case where last_login_str is not a valid datetime string
+    # For example, you might want to log an error or prompt the user to re-enter their login information
+    print("Error: Last login datetime is not valid")
+    # You can add additional logic here as needed
+
 
 # take in data from the user and pass it to the database
 connection = sqlite3.connect(database='database.db')
 cursor = connection.cursor()
 
 
+@Logger.log_action(action='Run help command', severity='logging.INFO')
 def help_command():
     """Makes a string, called by default and is a less verbose man command."""
     print("""
@@ -85,7 +111,7 @@ def help_command():
 
     """)
 
-
+@Logger.log_action(action='Run verbose help command', severity='logging.INFO')
 def help_command_verbose():
     """Help command displays all available commands to the user."""
     print("""
@@ -130,7 +156,7 @@ def help_command_verbose():
         <project_link>, and <project_id> with the actual values.
     """)
 
-
+@Logger.log_action(action='Run todo command', severity='logging.INFO')
 def todo_command():
     """This function commands shows user all current projects when called."""
     print('Viewing existing projects...')
@@ -144,7 +170,7 @@ def todo_command():
         print('No projects found, please create a new project.')
     sys.exit()
 
-
+@Logger.log_action(action='Run main.py #main# command', severity='logging.INFO')
 def main():
     """This is the main function which is called by the TODO.sh script.
 

@@ -5,8 +5,10 @@ This module contains the class for the finish command.
 
 import sqlite3
 from sys import argv
+import logging
 
 from database import Database as dataclass
+from Logger import Logger
 
 class FinishedProject:
     """
@@ -18,7 +20,7 @@ class FinishedProject:
         self.cursor = self.connection.cursor()
         self.db = dataclass()
 
-
+    @Logger.log_action(action='Finish project', severity=logging.DEBUG)
     def finish_project(self):
         """
         command function

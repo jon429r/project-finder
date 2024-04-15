@@ -4,8 +4,10 @@ This file is responsible for creating a new project in the database.
 
 import sqlite3
 from sys import argv
+import logging
 
 from database import Database as dataclass
+from Logger import Logger
 
 class NewProject:
     """
@@ -15,6 +17,7 @@ class NewProject:
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
 
+    @Logger.log_action(action='Creating a new project', severity=logging.INFO)
     def new_project(self):
         """
         command function

@@ -7,8 +7,10 @@ import configparser as config
 import datetime
 import sys
 import os
+import logging
 
 from auth import decrypt_data
+from Logger import Logger
 
 config_parser = config.ConfigParser()
 
@@ -20,16 +22,16 @@ try:
 
     config_parser.read(config_file_path)
 
-    log_file = config_parser.get('Logging', 'log_path')
+    log_file = config_parser.get('Logging', 'file')
 
 except FileExistsError as e:
     print(f"Error in user.ini file: {e}")
     sys.exit(1)
 
-
+@Logger.log_action(action='Log command function', severity=logging.ERROR)
 def log_command(command, success):  # Corrected `success`
     """
-    Function adds to the log file with the information about the current command
+    Function adds to the log file with the information about the current command.
     
     Args:
         command (str): command with arguments  # Corrected 'arguments'

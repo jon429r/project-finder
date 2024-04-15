@@ -6,8 +6,10 @@ import sqlite3
 import os
 from sqlite3.dbapi2 import Error
 from sys import argv
+import logging
 
 from database import Database as dataclass
+from Logger import Logger
 
 class OpenProject:
     """
@@ -17,6 +19,8 @@ class OpenProject:
         self.connection = sqlite3.connect('database.db')
         self.cursor = self.connection.cursor()
         self.db = dataclass()
+
+    @Logger.log_action(action='Opening a project #main#', severity=logging.INFO)
     def open_project(self):
         """
         command function
@@ -79,6 +83,7 @@ class OpenProject:
                 print('Invalid input, please try again.')
             return
 
+    @Logger.log_action(action='Opening a project #Safari#', severity=logging.INFO)
     def in_safari(self, identifier, project_id):
         """
         Open the project in Safari.
@@ -108,6 +113,7 @@ class OpenProject:
             return 400
         return
 
+    @Logger.log_action(action='Opening a project #Finder#', severity=logging.INFO)
     def in_finder(self, identifier, project_id):
         """
         Open the project in Finder.
@@ -143,6 +149,7 @@ class OpenProject:
         print('done...!')
         return
 
+    @Logger.log_action(action='Opening a project #Code editor#', severity=logging.INFO)
     def in_code_editor(self, identifier, project):
         """
         Open the project in the user's preferred code editor.

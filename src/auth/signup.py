@@ -1,8 +1,10 @@
 """
-This module is used to setup the user.ini file for the user. It will ask the
- user for a username, password, email, default code editor, default browser, 
- and setup the default database and logging paths. It will also generate a key 
- for encryption and store it in the user.ini file.
+This module is used to setup the user.ini file for the user.
+
+It will ask the
+user for a username, password, email, default code editor, default browser, 
+and setup the default database and logging paths. It will also generate a key 
+for encryption and store it in the user.ini file.
 """
 
 import configparser as config
@@ -24,6 +26,18 @@ PATH = script_dir
 # Construct the relative path to user.ini
 config_file_path = os.path.join(script_dir, "../../config/user.ini")
 config.read(config_file_path)
+
+
+@Logger.log_action(action='Update Last login time', severity='Error')
+def update_last_login():
+    # Get current datetime
+    new_login_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print('New login time:', new_login_time)
+
+    # Update last login time in configuration
+    config.set('LastLogin', 'last_login', new_login_time)
+
+    return new_login_time
 
 
 @Logger.log_action(action='Encypting data', severity=logging.ERROR)
@@ -64,7 +78,7 @@ def user_signup():
         else:
             continue
 
-    last_login = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    last_login = datetime.datetime.now()
 
     key = Fernet.generate_key().decode()
 
@@ -81,16 +95,20 @@ def user_signup():
         "email": email,
         "pin": pin,
     }
-    config["LastLogin"] = {"last_login": last_login}
+    
+    time = update_last_login()
+
+    config["LastLogin"] = {"last_login": time}
+
+    with open(config_file_path, "w") as config_file:
+        config.write(config_file)
 
     return key
 
 
 @Logger.log_action(action='Obtaining User defaults', severity=logging.INFO)
 def user_defaults():
-    """
-    Ask the user for the default code editor and default browser
-    """
+    """Ask the user for the default code editor and default browser."""
     code_editor = input("Enter your default code editor: ")
     browser = input("Enter your default browser: ")
 
@@ -100,9 +118,7 @@ def user_defaults():
 
 @Logger.log_action(action='Setting up Database path', severity=logging.CRITICAL)
 def database_default():
-    """
-    Setup the default database path
-    """
+    """Setup the default database path."""
     db_path = os.path.join(PATH, "database.db")
 
     # Write to user.ini file
@@ -111,9 +127,7 @@ def database_default():
 
 @Logger.log_action(action='Setting up Logging path', severity=logging.CRITICAL)
 def logging_default():
-    """
-    Setup the default log file path
-    """
+    """Setup the default log file path."""
     log_path = os.path.join(PATH, "logs", "todo.log")
 
     # Write to user.ini file
@@ -122,11 +136,6 @@ def logging_default():
 
 @Logger.log_action(action='Signing up for new user #MAIN#', severity=logging.CRITICAL)
 def signup_main():
-    """
-    Main function that calls all the other functions
-    """
-
-    # Setup parser
     try:
         config.read(config_file_path)
     except FileNotFoundError:
@@ -138,14 +147,17 @@ def signup_main():
 
     key = user_signup()
     user_defaults()
-    # Store key
 
+    # Store key
     config["Key"] = {"key": key}
 
     print("That's all we need from you, let us setup the rest for you!")
 
     database_default()
     logging_default()
+
+    # Update last login time
+    new_datetime = update_last_login()
 
     # Write configuration to file
     with open(config_file_path, "w") as config_file:

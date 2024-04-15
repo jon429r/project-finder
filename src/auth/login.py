@@ -21,7 +21,7 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 config_file_path = os.path.join(script_dir, '../../config/user.ini')
 config.read(config_file_path)
 
-log_file = config.get('Logging','log_path')
+log_file = config.get('Logging', 'file')
 
 
 def log_signin(success):
