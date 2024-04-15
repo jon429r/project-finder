@@ -95,7 +95,7 @@ connection = sqlite3.connect(database='database.db')
 cursor = connection.cursor()
 
 
-@Logger.log_action(action='Run help command', severity='logging.INFO')
+@Logger.log_action(action='Run help command', severity=logging.INFO)
 def help_command():
     """Makes a string, called by default and is a less verbose man command."""
     print("""
@@ -111,7 +111,8 @@ def help_command():
 
     """)
 
-@Logger.log_action(action='Run verbose help command', severity='logging.INFO')
+
+@Logger.log_action(action='Run verbose help command', severity=logging.INFO)
 def help_command_verbose():
     """Help command displays all available commands to the user."""
     print("""
@@ -156,7 +157,8 @@ def help_command_verbose():
         <project_link>, and <project_id> with the actual values.
     """)
 
-@Logger.log_action(action='Run todo command', severity='logging.INFO')
+
+@Logger.log_action(action='Run todo command', severity=logging.INFO)
 def todo_command():
     """This function commands shows user all current projects when called."""
     print('Viewing existing projects...')
@@ -170,7 +172,8 @@ def todo_command():
         print('No projects found, please create a new project.')
     sys.exit()
 
-@Logger.log_action(action='Run main.py #main# command', severity='logging.INFO')
+
+@Logger.log_action(action='Run main.py #main# command', severity=logging.INFO)
 def main():
     """This is the main function which is called by the TODO.sh script.
 

@@ -90,10 +90,10 @@ def user_signup():
 
     # Write to user.ini file
     config["User"] = {
-        "username": username,
-        "password": password,
-        "email": email,
-        "pin": pin,
+        "username": str(username),
+        "password": str(password),
+        "email": str(email),
+        "pin": str(pin),
     }
     
     time = update_last_login()
