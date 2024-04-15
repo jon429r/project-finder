@@ -97,7 +97,7 @@ def login_pin():
 
     stored_pin = config['User'].get('pin', '')
 
-    if pin == decrypt_data(stored_pin):
+    if pin == decrypt_data(stored_pin).decode():
         print("Pin correct!")
         log_signin(True)
     else:

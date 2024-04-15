@@ -47,38 +47,26 @@ config_parser.read(config_file_path)
 SIGNUP = False
 
 # Sign up if the user needs to sign up
-print("last login pre login", config_parser.get('LastLogin', 'last_login'))
 if config_parser.get('LastLogin', 'last_login') == '0000-00-00 00:00:00':
     SIGNUP = True
 else:
     SIGNUP = False
 
-print('Signup var', SIGNUP)
-
 if SIGNUP:
     signup.signup_main()
 
-# Assuming last_login is read as a string from config_parser
 last_login_str = config_parser['LastLogin']['last_login']
-print(last_login_str)
-
-new_login_time = datetime.datetime.now()
-print(new_login_time)
 
 # Attempt to parse last_login_str as a datetime object
 try:
     last_login = datetime.datetime.strptime(last_login_str, "%Y-%m-%d %H:%M:%S")
 except ValueError:
-    # Handle the case where last_login_str is not a valid datetime string
     print("Error: Invalid last login datetime format")
-    # Set a default value for last_login or handle it based on your application logic
     last_login = None
 
 if last_login is not None:
     current_time = datetime.datetime.now()
     time_difference = current_time - last_login
-    print("current time", current_time)
-    print("time difference", time_difference)
     if time_difference.days > 1:
         auth.login()
     else:
@@ -197,28 +185,32 @@ def main():
                 LogProject.log_command(full_command, True)
                 sys.exit()
             case 'new':
-                NewProject.new_project()
-                LogProject.log_command(full_command, True)
+                new_project_instance = NewProject()
+                new_project_instance.new_project()
+                #NewProject.new_project()
+                #LogProject.log_command(full_command, True)
                 sys.exit()
             case 'todo':
                 todo_command()
-                LogProject.log_command(full_command, True)
+                #LogProject.log_command(full_command, True)
                 sys.exit()
             case 'finish':
-                FinishProject.finish_project()
-                LogProject.log_command(full_command, True)
+                finish_project_instance = FinishProject()
+                finish_project_instance.finish_project()
+                #LogProject.log_command(full_command, True)
                 sys.exit()
             case 'open':
-                OpenProject.open_project()
-                LogProject.log_command(full_command, True)
+                open_project_instance = OpenProject()
+                open_project_instance.open_project()
+                #LogProject.log_command(full_command, True)
                 sys.exit()
             case 'exit':
-                LogProject.log_command(full_command, True)
+                #LogProject.log_command(full_command, True)
                 exit = True
             case _:
                 print("""Invalid command, please try again. Type
                        "help" for a list of commands.""")
-                LogProject.log_command(full_command, False)
+                #LogProject.log_command(full_command, False)
                 sys.exit()
         sys.exit()
     print('Come again!')

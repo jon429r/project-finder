@@ -51,7 +51,7 @@ class NewProject:
             print('Project link: None')
 
         print('Please confirm the details above are correct.')
-        confirm = False;
+        confirm = False
         while confirm is False:
             confirmation = input('Y/N')
 

@@ -26,8 +26,11 @@ COLOR_CODES = {
 }
 
 # Set up a custom color formatter
-class ColoredFormatter(logging.Formatter):
+class _ColoredFormatter(logging.Formatter):
+    """Formats the Color of the log message"""
+
     def format(self, record):
+        """Function that formats the color of the log message"""
         levelname = record.levelname
         message = super().format(record)
         color = COLOR_CODES.get(levelname, Fore.WHITE)
@@ -36,10 +39,13 @@ class ColoredFormatter(logging.Formatter):
 # Set up logger
 root_logger = logging.getLogger()
 for handler in root_logger.handlers:
-    handler.setFormatter(ColoredFormatter('%(asctime)s - %(levelname)s - %(message)s'))
+    handler.setFormatter(_ColoredFormatter('%(asctime)s - %(levelname)s - %(message)s'))
 
 class Logger:
     """Logging class, decorate a function with log_action"""
+
+    # Initialize logger instance
+    logger = logging.getLogger(__name__)
 
     @staticmethod
     def log_action(action, severity=logging.INFO):
@@ -50,25 +56,26 @@ class Logger:
         """
         def decorator(func):
             def wrapper(*args, **kwargs):
+                levelname = None
+                message = "Logging Failure??"
                 try:
                     result = func(*args, **kwargs)
                     levelname = 'INFO'
                     message = f"SUCCESS - {action} - {func.__name__}"
-                    logging.info(message)
+                    Logger.logger.log(severity, message)  # Use logger instance from Logger class
                     return result
                 except TypeError as e:
                     levelname = 'ERROR'
                     message = f"FAILURE - {e}"
-                    logging.error(message)
+                    Logger.logger.log(severity, message)  # Use logger instance from Logger class
                     raise
                 except Exception as e:
                     levelname = 'FAILURE'
                     message = f"FAILURE - Error in {func.__name__}: {e}"
-                    logging.error(message)
+                    Logger.logger.log(severity, message)  # Use logger instance from Logger class
                     raise
                 finally:
-                    color = COLOR_CODES.get(levelname, Fore.WHITE)
-                    print(f"{color}{message}{Style.RESET_ALL}")
-
+                    pass
+                
             return wrapper
         return decorator

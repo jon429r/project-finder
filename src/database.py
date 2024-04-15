@@ -24,7 +24,7 @@ class Database:
         self.create_table("projects")
         self.create_table("finished_projects")
 
-    @Logger.log_action("Adding project to database", severity=logging.INFO)
+    @Logger.log_action(action="Adding project to database", severity=logging.INFO)
     def new_project(self, name, directory, link):
         """
         Add a new project to the 'projects' table.
@@ -43,7 +43,7 @@ class Database:
         except sqlite3.IntegrityError as e:
             print(f"Error: Unable to add project to database. {e}")
 
-    @Logger.log_action("Creating new table for projects", severity=logging.CRITICAL)
+    @Logger.log_action(action="Creating new table for projects", severity=logging.CRITICAL)
     def create_table(self, table_name):
         """
         Create a table if it doesn't exist.
@@ -58,7 +58,7 @@ class Database:
         except sqlite3.OperationalError as e:
             print(f"Error: Unable to create {table_name} table. {e}")
 
-    @Logger.log_action("Removing project from database", severity=logging.INFO)
+    @Logger.log_action(action="Removing project from database", severity=logging.INFO)
     def remove_project(self, identifier, project):
         """
         Remove a project from the 'projects' table.
@@ -89,7 +89,7 @@ class Database:
         except sqlite3.IntegrityError as e:
             print(f"Error: Unable to remove project to database. {e}")
 
-    @Logger.log_action("Getting project info from database", severity=logging.INFO)    
+    @Logger.log_action(action="Getting project info from database", severity=logging.INFO)    
     def get_project_info(self, idenifier, project):
         """
         Get information about a project from the 'projects' table.
