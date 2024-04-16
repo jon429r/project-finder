@@ -167,7 +167,6 @@ def main():
 
     called by todo.sh script
     """
-    startup()
 
     full_command = ' '.join(argv[1:])
 
@@ -195,8 +194,7 @@ def main():
                 #LogProject.log_command(full_command, True)
                 sys.exit()
             case 'finish':
-                finish_project_instance = FinishProject()
-                finish_project_instance.finish_project()
+                FinishProject.FinishedProject()
                 #LogProject.log_command(full_command, True)
                 sys.exit()
             case 'open':
