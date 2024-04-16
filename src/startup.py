@@ -171,8 +171,5 @@ back_button.pack(pady=5)
 # Hide signup frame initially
 signup_frame.pack_forget()
 
-# Main frame
-
-
 
 root.mainloop()

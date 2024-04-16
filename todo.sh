@@ -108,6 +108,10 @@ while [[ $# -gt 0 ]]; do
             verbose="True"
             shift 1
             ;;
+        -gui)
+            command="gui"
+            shift 1
+            ;;
         *)
             echo "Unknown option: $1" >&2
             echo "Use Todo h or Todo help for more information."
@@ -120,6 +124,7 @@ script_dir="$(dirname "$(readlink -f "$0")")"
 
 # Determine the path to the Python script
 python_script="$script_dir/src/main.py"
+gui_script="$script_dir/src/startup.py"
 
 # Check if command is provided
 if [ -z "$command" ]; then
@@ -173,6 +178,11 @@ elif [ "$command" = "open" ]; then
     # Execute open command
     python3 "$python_script" "$command" "$project_name"
     echo "Executing open command..."
+
+elif [ "$command" = "gui" ]; then
+    python3 "$gui_script"
+    exit 1
+
 else
     echo "Error: Unknown command '$command'." >&2
     exit 1
