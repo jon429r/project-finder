@@ -42,15 +42,14 @@ As this is an application used through the Mac Terminal here are the commands fo
     please insert the whole directory path starting with a '/'
     2. View existing projects: todo -cmd todo or todo -c todo
     3. Finished an existing project: todo -cmd finish -name <project_name> 
-<<<<<<< HEAD
+
     or todo -c finish -n <project_name>
     4. Open an existing project: todo -cmd open -name <project_name> 
     or todo -c open -n <project_name>
     6. todo -cmd Help or todo -c Help
-=======
+
     4. Open an existing project: todo -cmd open -name <project_name>  
     6. Todo -cmd Help 
->>>>>>> e36baea60dcf145cc9ad29547c467d0b5156a4a7
 
 ## Compatibility
 
