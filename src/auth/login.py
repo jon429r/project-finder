@@ -17,11 +17,16 @@ config = config.ConfigParser()
 
 # Get the directory of the current script
 script_dir = os.path.dirname(os.path.realpath(__file__))
+PATH = script_dir
 # Construct the relative path to user.ini
-config_file_path = os.path.join(script_dir, '../../config/user.ini')
+config_file_path = os.path.join(script_dir, "../../config/user.ini")
 config.read(config_file_path)
 
-log_file = config.get('Logging', 'file')
+try:
+    log_file = config.get('Logging', 'log_path')
+except KeyError:
+    print("Logging: file not found in user.ini file, trying Logging: log_file")
+    config["Logging"] = {"file": 'file'}
 
 
 def log_signin(success):
@@ -76,7 +81,9 @@ def login(username=None, password=None):
     stored_username = config['User'].get('username', '')
     stored_password = config['User'].get('password', '')
 
-    if username == decrypt_data(stored_username) and password == decrypt_data(stored_password):
+    stored_password = decrypt_data(stored_password)
+
+    if password == stored_password and username == stored_username:
         print("Login successful!")
         config['LastLogin'] = {'last_login': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         log_signin(True)

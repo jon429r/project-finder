@@ -22,7 +22,7 @@ try:
 
     config_parser.read(config_file_path)
 
-    log_file = config_parser.get('Logging', 'file')
+    log_file = config_parser.get("Logging", "log_path")
 
 except FileExistsError as e:
     print(f"Error in user.ini file: {e}")
@@ -47,5 +47,3 @@ def log_command(command, success):  # Corrected `success`
 
     with open(log_file, 'a') as file:
         file.write(log_statement + '\n')  # Added newline character at the end of log statement
-
-

@@ -27,6 +27,12 @@ PATH = script_dir
 config_file_path = os.path.join(script_dir, "../../config/user.ini")
 config.read(config_file_path)
 
+try:
+    log_file = config.get('Logging', 'log_path')
+except KeyError:
+    print("Logging: file not found in user.ini file, trying Logging: log_file")
+    config["Logging"] = {"file": 'file'}
+
 
 @Logger.log_action(action='Update Last login time', severity=logging.ERROR)
 def update_last_login():
@@ -59,7 +65,7 @@ def user_signup(username=None, password=None, email=None, pin=None):
     """
     Ask the user for a username, password, and email
     """
-    if username or password or pin or email is None:
+    if username is None or password is None or pin is None or email is None:
         username = input("Enter a username: ")
 
         confirm = False
@@ -113,7 +119,7 @@ def user_signup(username=None, password=None, email=None, pin=None):
 @Logger.log_action(action='Obtaining User defaults', severity=logging.INFO)
 def user_defaults(code_editor=None, browser=None):
     """Ask the user for the default code editor and default browser."""
-    if code_editor or browser is None:
+    if code_editor is None or browser is None:
         code_editor = input("Enter your default code editor: ")
         browser = input("Enter your default browser: ")
 
@@ -136,11 +142,19 @@ def logging_default():
     log_path = os.path.join(PATH, "logs", "todo.log")
 
     # Write to user.ini file
-    config["Logging"] = {"log_path": log_path}
+    try:
+        config["Logging"] = {"log_path": log_path}
+    except KeyError:
+        print("Logging: log_path not found in user.ini file, trying Logging: file")
+        config["Logging"] = {"file": log_path}
 
 
 @Logger.log_action(action='Signing up for new user #MAIN#', severity=logging.CRITICAL)
 def signup_main(username=None, password=None, email=None, pin=None, code_editor=None, browser=None):
+    """
+    Sign up for a new user.
+    """
+    # Read user.ini file"""
     try:
         config.read(config_file_path)
     except FileNotFoundError:
@@ -182,4 +196,8 @@ def get_key():
     """
     Returns key from the config file
     """
-    return config.get("Key", "key")
+    try:
+        return config.get("Key", "key")
+    except KeyError:
+        print("Error reading key from user.ini file")
+        return None
