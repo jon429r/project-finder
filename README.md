@@ -36,7 +36,7 @@ Future plans for Project-Finder include:
 
 As this is an application used through the Mac Terminal here are the commands for the application 
 
-I'm currently working on implementing a GIU run this by Using the command TODO -GUI
+I'm currently working on implementing a GIU run this by Using the command TODO -gui
 
     1. Create a new project: todo --cmd new --name <"project_name"> --dir <"working_directory"> 
     or todo -c new -n <"project_name"> -d <"working_directory"> -l <"project_link">
