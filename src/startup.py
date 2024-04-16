@@ -3,6 +3,21 @@ from tkinter import ttk
 from tkinter import messagebox
 from auth import login, signup_main
 
+def create_main_frame():
+    """Create the main frame for the application after successful login."""
+    global main_frame
+    
+    # Destroy existing frames
+    login_frame.pack_forget()
+    signup_frame.pack_forget()
+    
+    # Create main frame
+    main_frame = tk.Frame(root)
+    tk.Label(main_frame, text="Welcome to the Main Frame").pack()
+    # Add more widgets and functionality as needed
+    
+    main_frame.pack(expand=True, fill="both", padx=200, pady=200)
+
 
 def login_error_box(message):
     """Display an error message box for login errors."""
@@ -10,8 +25,6 @@ def login_error_box(message):
 
 def login_user():
     """Placeholder function for handling login."""
-    print("############CHECK###################", login_username_entry.get(),
-          login_password_entry.get())
     username = login_username_entry.get()
     password = login_password_entry.get()
 
@@ -20,8 +33,12 @@ def login_user():
         return
     else:
         try:
-            login(username, password)
-            print("Login button clicked")
+            success = login(username, password)
+            if success:
+                create_main_frame()
+            else:
+                login_error_box("Invalid username or password")
+                return
         except Exception as e:
             error = str(e)
             print(error)
@@ -151,8 +168,11 @@ signup_button.pack(pady=5)
 back_button = ttk.Button(signup_frame, text="Back to Login", command=show_login)
 back_button.pack(pady=5)
 
-
 # Hide signup frame initially
 signup_frame.pack_forget()
+
+# Main frame
+
+
 
 root.mainloop()

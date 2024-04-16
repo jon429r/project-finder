@@ -81,15 +81,17 @@ def login(username=None, password=None):
     stored_username = config['User'].get('username', '')
     stored_password = config['User'].get('password', '')
 
-    stored_password = decrypt_data(stored_password)
+    stored_password = decrypt_data(stored_password).decode()
 
     if password == stored_password and username == stored_username:
         print("Login successful!")
         config['LastLogin'] = {'last_login': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         log_signin(True)
+        return True
     else:
         print("Invalid username or password. Please try again.")
         log_signin(False)
+        return False
 
 
 @Logger.log_action(action='logging in w/pin', severity=logging.INFO)
