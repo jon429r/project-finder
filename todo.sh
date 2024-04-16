@@ -21,6 +21,58 @@ open_cmd_usage() {
     echo "Short options: $0 -c <command> -n <project_name> or -i <project_id"
     exit 1
 }
+help_cmd_verbose(){
+        echo "List of available commands and uses:"
+
+        echo "1. Create a new project:"
+        echo "new --name <"proj_name"> --dir <"working_dir"> --link" 
+        echo "<"proj_link">"
+        echo "new -n <"project_name"> -d <"working_directory"> -l <"project_link">"
+        echo "Create a new project with a specified name, working dir, and or project link."
+
+        echo "2. View existing projects:"
+        echo "todo --cmd todo"
+        echo "todo -c todo"
+        echo "Display a list of existing projects."
+
+        echo "3. Finish an existing project:"
+        echo "todo --cmd finish --name <project_name> or --id <project_id>"
+        echo "todo -c finish -n <project_name> or -i <project_id>"
+        
+
+        echo "4. Open an existing project:"
+        echo "todo --cmd open --name <project_name>"
+        echo "Open an existing project by name."
+        echo "Alternatively, you can open a project using its ID:"
+        echo "todo --cmd open --id <project_id>"
+        echo "todo -c open -n <project_name>"
+        echo "todo -c open -i <project_id>"
+        
+
+        echo "5. Exit:"
+        echo "exit"
+        echo "Quit the application."
+
+        echo "6. Help:"
+        echo "todo --cmd help"
+        echo "todo -c help"
+        echo "help"
+        echo "Display this help message."
+
+        echo "Please replace placeholders like <project_name>, <working_directory>, <project_link>, and"
+        echo "e <project_id> with the actual values."
+}
+
+help_cmd(){
+    echo "list of commands:"
+
+    echo "new, todo, finish, open, exit, help"
+
+    echo "Short arguments: -n, -d, -l, -c, -i, -v"
+    echo "long arguments: --name, --dir, --link, --cmd, --id, --verbose"
+
+    echo "for a more verbose manual, add -v or --verbose to the help command"
+}
 
 working_directory="None"
 project_link="None"
@@ -48,7 +100,7 @@ while [[ $# -gt 0 ]]; do
             project_link="$2"
             shift 2
             ;;
-        -h|--help|?)
+        h|help|?)
             command="help"
             shift 1
             ;;
@@ -58,6 +110,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1" >&2
+            echo "Use Todo h or Todo help for more information."
             exit 1
             ;;
     esac
@@ -71,14 +124,15 @@ python_script="$script_dir/src/main.py"
 # Check if command is provided
 if [ -z "$command" ]; then
     echo "Error: Command is required." >&2
+    echo "Use Todo h or Todo help for more information."
     exit 1
 fi
 
 if [ "$command" = "help" ]; then
     if [ "$verbose" = "True" ]; then
-        python3 "/src/main.py" "$command" -v
+        help_cmd_verbose
     else
-        python3 "/src/main.py"  "$command" 
+        help_cmd
     fi
 
 elif [ "$command" = "new" ]; then

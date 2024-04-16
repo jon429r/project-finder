@@ -83,69 +83,6 @@ connection = sqlite3.connect(database='database.db')
 cursor = connection.cursor()
 
 
-@Logger.log_action(action='Run help command', severity=logging.INFO)
-def help_command():
-    """Makes a string, called by default and is a less verbose man command."""
-    print("""
-
-    list of commands:
-
-    new, todo, finish, open, exit, help
-
-    Short arguments: -n, -d, -l, -c, -i, -v
-    long arguments: --name, --dir, --link, --cmd, --id, --verbose
-
-    for a more verbose manual, add -v or --verbose to the help command
-
-    """)
-
-
-@Logger.log_action(action='Run verbose help command', severity=logging.INFO)
-def help_command_verbose():
-    """Help command displays all available commands to the user."""
-    print("""
-        List of available commands and uses:
-
-        1. Create a new project:
-        new --name <"proj_name"> --dir <"working_dir> --link <"proj_link">
-        new -n <"project_name"> -d <"working_directory"> -l <"project_link">
-        Create a new project with a specified name, working dir, and or
-        project link.
-
-        2. View existing projects:
-        todo --cmd todo
-        todo -c todo
-        Display a list of existing projects.
-
-        3. Finish an existing project:
-        todo --cmd finish --name <project_name> or --id <project_id>
-        todo -c finish -n <project_name> or -i <project_id>
-        
-
-        4. Open an existing project:
-        todo --cmd open --name <project_name>
-        Open an existing project by name.
-        Alternatively, you can open a project using its ID:
-        todo --cmd open --id <project_id>
-        todo -c open -n <project_name>
-        todo -c open -i <project_id>
-        
-
-        5. Exit:
-        exit
-        Quit the application.
-
-        6. Help:
-        todo --cmd help
-        todo -c help
-        help
-        Display this help message.
-
-        Please replace placeholders like <project_name>, <working_directory>,
-        <project_link>, and <project_id> with the actual values.
-    """)
-
-
 @Logger.log_action(action='Run todo command', severity=logging.INFO)
 def todo_command():
     """This function commands shows user all current projects when called."""

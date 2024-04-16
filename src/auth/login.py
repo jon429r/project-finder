@@ -64,14 +64,14 @@ def load_configuration():
 
 
 @Logger.log_action(action='logging in w/username+pass', severity=logging.INFO)
-def login():
+def login(username=None, password=None):
     """
     Prompt the user for login credentials and verify them
     """
     load_configuration()
-
-    username = input("Enter your username: ")
-    password = getpass.getpass("Enter your password: ")
+    if username and password is None:
+        username = input("Enter your username: ")
+        password = getpass.getpass("Enter your password: ")
 
     stored_username = config['User'].get('username', '')
     stored_password = config['User'].get('password', '')

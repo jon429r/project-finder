@@ -28,7 +28,7 @@ config_file_path = os.path.join(script_dir, "../../config/user.ini")
 config.read(config_file_path)
 
 
-@Logger.log_action(action='Update Last login time', severity='Error')
+@Logger.log_action(action='Update Last login time', severity=logging.ERROR)
 def update_last_login():
     # Get current datetime
     new_login_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -45,45 +45,49 @@ def encrypt_data(data, key):
     """
     Encrypt the data using Fernet
     """
-    cipher_suite = Fernet(key)
-    return cipher_suite.encrypt(data.encode()).decode()
+    if key and data is not None:
+        cipher_suite = Fernet(key)
+        encrypted_data = cipher_suite.encrypt(data.encode())
+        return encrypted_data.decode()
+    else:
+        print("Error: Key or data is None")
+        sys.exit(1)
 
 
 @Logger.log_action(action='Signing up new user', severity=logging.INFO)
-def user_signup():
+def user_signup(username=None, password=None, email=None, pin=None):
     """
     Ask the user for a username, password, and email
     """
-    username = input("Enter a username: ")
+    if username or password or pin or email is None:
+        username = input("Enter a username: ")
 
-    confirm = False
-    while confirm is False:
-        password = getpass.getpass("Enter a password: ")
-        confirm_password = getpass.getpass("Please Confirm the Password: ")
+        confirm = False
+        while confirm is False:
+            password = getpass.getpass("Enter a password: ")
+            confirm_password = getpass.getpass("Please Confirm the Password: ")
 
-        if password == confirm_password:
-            confirm = True
-        else:
-            continue
+            if password == confirm_password:
+                confirm = True
+            else:
+                continue
 
-    email = input("Enter your email: ")
+        email = input("Enter your email: ")
 
-    confirm = False
-    while confirm is False:
-        pin = getpass.getpass("Enter a pin, must be at least 4 digits: ")
-        confirm_pin = getpass.getpass("Please confirm your pin: ")
+        confirm = False
+        while confirm is False:
+            pin = getpass.getpass("Enter a pin, must be at least 4 digits: ")
+            confirm_pin = getpass.getpass("Please confirm your pin: ")
 
-        if pin == confirm_pin and len(pin) >= 4:
-            confirm = True
-        else:
-            continue
-
-    last_login = datetime.datetime.now()
+            if pin == confirm_pin and len(pin) >= 4:
+                confirm = True
+            else:
+                continue
 
     key = Fernet.generate_key().decode()
 
     # Encrypt the username, password, and email
-    username = username, key
+    username = username
     password = encrypt_data(password, key)
     email = encrypt_data(email, key)
     pin = encrypt_data(pin, key)
@@ -107,13 +111,14 @@ def user_signup():
 
 
 @Logger.log_action(action='Obtaining User defaults', severity=logging.INFO)
-def user_defaults():
+def user_defaults(code_editor=None, browser=None):
     """Ask the user for the default code editor and default browser."""
-    code_editor = input("Enter your default code editor: ")
-    browser = input("Enter your default browser: ")
+    if code_editor or browser is None:
+        code_editor = input("Enter your default code editor: ")
+        browser = input("Enter your default browser: ")
 
     # Write to user.ini file
-    config["UserDefaults"] = {"code_editor": code_editor, "browser": browser}
+    config["UserDefaults"] = {"code_editor": str(code_editor), "browser": str(browser)}
 
 
 @Logger.log_action(action='Setting up Database path', severity=logging.CRITICAL)
@@ -135,7 +140,7 @@ def logging_default():
 
 
 @Logger.log_action(action='Signing up for new user #MAIN#', severity=logging.CRITICAL)
-def signup_main():
+def signup_main(username=None, password=None, email=None, pin=None, code_editor=None, browser=None):
     try:
         config.read(config_file_path)
     except FileNotFoundError:
@@ -145,8 +150,15 @@ def signup_main():
     print("Welcome to my todo app!")
     print("Let's get you signed up so you can be more productive!")
 
-    key = user_signup()
-    user_defaults()
+    if username and password is None:
+        key = user_signup()
+    else:
+        key = user_signup(username, password, email, pin)
+    
+    if code_editor and browser is None:
+        user_defaults()
+    else:
+        user_defaults(code_editor=code_editor, browser=browser)
 
     # Store key
     config["Key"] = {"key": key}
@@ -155,9 +167,6 @@ def signup_main():
 
     database_default()
     logging_default()
-
-    # Update last login time
-    new_datetime = update_last_login()
 
     # Write configuration to file
     with open(config_file_path, "w") as config_file:
