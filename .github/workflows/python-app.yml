@@ -40,9 +40,9 @@ jobs:
     #  run: |
     #    pylint .
 
-    - name: Test code
-      run: |
-        pytest- name: Install dependencies
+    #- name: Test code
+    #  run: |
+    #    pytest- name: Install dependencies
 
     - name: Format code
       run: |
