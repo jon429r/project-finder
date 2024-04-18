@@ -40,6 +40,27 @@ jobs:
     #  run: |
     #    pylint .
 
+    - name: Test code
+      run: |
+        pytest- name: Install dependencies
+
+    - name: Format code
+      run: |
+        python -m pip install --upgrade pip
+        pip install black mypy pylint isort
+
+    - name: Run Black
+      run: black .
+
+    - name: Run Mypy
+      run: mypy .
+
+    - name: Run Pylint
+      run: pylint .
+
+    - name: Run Isort
+      run: isort --profile black .
+
     - name: Notify on workflow failure
       if: failure()
       run: |
