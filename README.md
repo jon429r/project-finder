@@ -16,7 +16,7 @@ This application is built using an SQLite database to store project details, wit
 - install python if version is less than 3.7 using the provided script 'install_python3.bash'.
 - Do this by running chmod +x ./install_python.bash && ./install_python.bash
 - Setup the Bash and zshell environment  by running chmod +x setup_env.sh && ./setup_env.sh
-- then run the code with the command 'python3 main.py'
+- then run the code with the bash or zsh command TODO
 
 ## Bugs
 
@@ -27,14 +27,16 @@ As the project is still in development, there maybe a few identified bugs:
 
 Future plans for Project-Finder include:
 
-- **GUI:** Develop a graphical user interface for a more user-friendly experience, moving away from the command line.
+- **GUI:** **In development** Develop a graphical user interface for a more user-friendly experience, moving away from the command line.
 - **Migration to MySQL:** Transfer data to a MySQL server, introducing user entities with passwords and usernames.
 - **Bug Fixes:** Prioritize fixing existing bugs before implementing new features.
 
 
 ## Commands
 
-As this is an application used through the Mac Terminal here are the commands for the application (I do have plans for a GUI)
+As this is an application used through the Mac Terminal here are the commands for the application 
+
+I'm currently working on implementing a GIU run this by Using the command TODO -gui
 
     1. Create a new project: todo --cmd new --name <"project_name"> --dir <"working_directory"> 
     or todo -c new -n <"project_name"> -d <"working_directory"> -l <"project_link">
@@ -42,15 +44,14 @@ As this is an application used through the Mac Terminal here are the commands fo
     please insert the whole directory path starting with a '/'
     2. View existing projects: todo -cmd todo or todo -c todo
     3. Finished an existing project: todo -cmd finish -name <project_name> 
-<<<<<<< HEAD
+
     or todo -c finish -n <project_name>
     4. Open an existing project: todo -cmd open -name <project_name> 
     or todo -c open -n <project_name>
     6. todo -cmd Help or todo -c Help
-=======
+
     4. Open an existing project: todo -cmd open -name <project_name>  
     6. Todo -cmd Help 
->>>>>>> e36baea60dcf145cc9ad29547c467d0b5156a4a7
 
 ## Compatibility
 
