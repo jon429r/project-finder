@@ -1,27 +1,29 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+
 from auth import login, signup_main
+
 
 def create_main_frame():
     """Create the main frame for the application after successful login."""
     global main_frame
-    
+
     # Destroy existing frames
     login_frame.pack_forget()
     signup_frame.pack_forget()
-    
+
     # Create main frame
     main_frame = tk.Frame(root)
     tk.Label(main_frame, text="Welcome to the Main Frame").pack()
     # Add more widgets and functionality as needed
-    
+
     main_frame.pack(expand=True, fill="both", padx=200, pady=200)
 
 
 def login_error_box(message):
     """Display an error message box for login errors."""
     messagebox.showerror("Login Error", message)
+
 
 def login_user():
     """Placeholder function for handling login."""
@@ -43,12 +45,11 @@ def login_user():
             error = str(e)
             print(error)
             if error.startswith("InvalidToken"):
-                print('InvalidToken', {e})
+                print("InvalidToken", {e})
                 login_error_box("CRITICAL ERROR: Invalid Token")
             else:
-                print('Error while loggin in user',{e})
+                print("Error while loggin in user", {e})
                 login_error_box("Error while logging in user, please try again")
-
 
 
 def get_signup_inputs():
@@ -61,11 +62,34 @@ def get_signup_inputs():
     email = email_entry.get()
     code_editor = code_editor_entry.get()
     browser = browser_entry.get()
-    return username, password, confirm_password, pin, confirm_pin, email, code_editor, browser
+    return (
+        username,
+        password,
+        confirm_password,
+        pin,
+        confirm_pin,
+        email,
+        code_editor,
+        browser,
+    )
 
-def validate_signup_inputs(username, password, confirm_password, pin, confirm_pin, email, code_editor, browser):
+
+def validate_signup_inputs(
+    username, password, confirm_password, pin, confirm_pin, email, code_editor, browser
+):
     """Validate all the signup inputs."""
-    if not all((username, password, confirm_password, pin, confirm_pin, email, code_editor, browser)):
+    if not all(
+        (
+            username,
+            password,
+            confirm_password,
+            pin,
+            confirm_pin,
+            email,
+            code_editor,
+            browser,
+        )
+    ):
         return False, "All fields are required"
     elif password != confirm_password:
         return False, "Passwords do not match"
@@ -74,10 +98,29 @@ def validate_signup_inputs(username, password, confirm_password, pin, confirm_pi
     else:
         return True, ""
 
+
 def signup_user():
     """Handle signup process."""
-    username, password, confirm_password, pin, confirm_pin, email, code_editor, browser = get_signup_inputs()
-    valid, message = validate_signup_inputs(username, password, confirm_password, pin, confirm_pin, email, code_editor, browser)
+    (
+        username,
+        password,
+        confirm_password,
+        pin,
+        confirm_pin,
+        email,
+        code_editor,
+        browser,
+    ) = get_signup_inputs()
+    valid, message = validate_signup_inputs(
+        username,
+        password,
+        confirm_password,
+        pin,
+        confirm_pin,
+        email,
+        code_editor,
+        browser,
+    )
     if valid:
         # Perform signup process
         signup_main(username, password, email, pin, code_editor, browser)

@@ -8,12 +8,13 @@ for encryption and store it in the user.ini file.
 """
 
 import configparser as config
+import datetime
+import getpass
+import logging
 import os
 import sys
-import getpass
+
 from cryptography.fernet import Fernet
-import datetime
-import logging
 
 from auth.login import log_signin
 from Logger import Logger
@@ -28,25 +29,25 @@ config_file_path = os.path.join(script_dir, "../../config/user.ini")
 config.read(config_file_path)
 
 try:
-    log_file = config.get('Logging', 'log_path')
+    log_file = config.get("Logging", "log_path")
 except KeyError:
     print("Logging: file not found in user.ini file, trying Logging: log_file")
-    config["Logging"] = {"file": 'file'}
+    config["Logging"] = {"file": "file"}
 
 
-@Logger.log_action(action='Update Last login time', severity=logging.ERROR)
+@Logger.log_action(action="Update Last login time", severity=logging.ERROR)
 def update_last_login():
     # Get current datetime
     new_login_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print('New login time:', new_login_time)
+    print("New login time:", new_login_time)
 
     # Update last login time in configuration
-    config.set('LastLogin', 'last_login', new_login_time)
+    config.set("LastLogin", "last_login", new_login_time)
 
     return new_login_time
 
 
-@Logger.log_action(action='Encypting data', severity=logging.ERROR)
+@Logger.log_action(action="Encypting data", severity=logging.ERROR)
 def encrypt_data(data, key):
     """
     Encrypt the data using Fernet
@@ -60,7 +61,7 @@ def encrypt_data(data, key):
         sys.exit(1)
 
 
-@Logger.log_action(action='Signing up new user', severity=logging.INFO)
+@Logger.log_action(action="Signing up new user", severity=logging.INFO)
 def user_signup(username=None, password=None, email=None, pin=None):
     """
     Ask the user for a username, password, and email
@@ -105,7 +106,7 @@ def user_signup(username=None, password=None, email=None, pin=None):
         "email": str(email),
         "pin": str(pin),
     }
-    
+
     time = update_last_login()
 
     config["LastLogin"] = {"last_login": time}
@@ -116,7 +117,7 @@ def user_signup(username=None, password=None, email=None, pin=None):
     return key
 
 
-@Logger.log_action(action='Obtaining User defaults', severity=logging.INFO)
+@Logger.log_action(action="Obtaining User defaults", severity=logging.INFO)
 def user_defaults(code_editor=None, browser=None):
     """Ask the user for the default code editor and default browser."""
     if code_editor is None or browser is None:
@@ -127,7 +128,7 @@ def user_defaults(code_editor=None, browser=None):
     config["UserDefaults"] = {"code_editor": str(code_editor), "browser": str(browser)}
 
 
-@Logger.log_action(action='Setting up Database path', severity=logging.CRITICAL)
+@Logger.log_action(action="Setting up Database path", severity=logging.CRITICAL)
 def database_default():
     """Setup the default database path."""
     db_path = os.path.join(PATH, "database.db")
@@ -136,7 +137,7 @@ def database_default():
     config["Data"] = {"path": db_path}
 
 
-@Logger.log_action(action='Setting up Logging path', severity=logging.CRITICAL)
+@Logger.log_action(action="Setting up Logging path", severity=logging.CRITICAL)
 def logging_default():
     """Setup the default log file path."""
     log_path = os.path.join(PATH, "logs", "todo.log")
@@ -149,8 +150,10 @@ def logging_default():
         config["Logging"] = {"file": log_path}
 
 
-@Logger.log_action(action='Signing up for new user #MAIN#', severity=logging.CRITICAL)
-def signup_main(username=None, password=None, email=None, pin=None, code_editor=None, browser=None):
+@Logger.log_action(action="Signing up for new user #MAIN#", severity=logging.CRITICAL)
+def signup_main(
+    username=None, password=None, email=None, pin=None, code_editor=None, browser=None
+):
     """
     Sign up for a new user.
     """
@@ -168,7 +171,7 @@ def signup_main(username=None, password=None, email=None, pin=None, code_editor=
         key = user_signup()
     else:
         key = user_signup(username, password, email, pin)
-    
+
     if code_editor and browser is None:
         user_defaults()
     else:
@@ -191,7 +194,7 @@ def signup_main(username=None, password=None, email=None, pin=None, code_editor=
     print("You are all set up! Enjoy the app!")
 
 
-@Logger.log_action(action='getting security key', severity=logging.ERROR)
+@Logger.log_action(action="getting security key", severity=logging.ERROR)
 def get_key():
     """
     Returns key from the config file

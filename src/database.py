@@ -1,7 +1,7 @@
 """This module provides an interface for interacting with SQLite database."""
 
-import sqlite3
 import logging
+import sqlite3
 
 from Logger import Logger
 
@@ -43,7 +43,9 @@ class Database:
         except sqlite3.IntegrityError as e:
             print(f"Error: Unable to add project to database. {e}")
 
-    @Logger.log_action(action="Creating new table for projects", severity=logging.CRITICAL)
+    @Logger.log_action(
+        action="Creating new table for projects", severity=logging.CRITICAL
+    )
     def create_table(self, table_name):
         """
         Create a table if it doesn't exist.
@@ -89,7 +91,9 @@ class Database:
         except sqlite3.IntegrityError as e:
             print(f"Error: Unable to remove project to database. {e}")
 
-    @Logger.log_action(action="Getting project info from database", severity=logging.INFO)    
+    @Logger.log_action(
+        action="Getting project info from database", severity=logging.INFO
+    )
     def get_project_info(self, idenifier, project):
         """
         Get information about a project from the 'projects' table.

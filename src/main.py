@@ -1,25 +1,26 @@
 """This module is used as an entry for the project."""
 
-import sqlite3
-from sys import argv
-import sys
-import os
 import configparser as config
 import datetime
 import logging
+import os
+import sqlite3
+import sys
+from sys import argv
 
 import tabulate
 from colorama import Fore
 
-from commands import OpenProject, FinishProject, NewProject, LogProject
 import auth
 from auth import signup
+from commands import FinishProject, LogProject, NewProject, OpenProject
 from Logger import Logger
 
 
 def startup():
     """Startup function prints out the logo when project starts."""
-    print('''
+    print(
+        """
            **********   *******   *******     *******    |
           /////**///   **/////** /**////**   **/////**   |   TODO APP
               /**     **     //**/**    /** **     //**  |
@@ -28,15 +29,16 @@ def startup():
               /**    //**     ** /**    ** //**     **   |   Help or ? for help
               /**     //*******  /*******   //*******    |
               //       ///////   ///////     ///////     |
-          ''')
+          """
+    )
 
 
 startup()
 
-print('Welcome to the project manager!')
+print("Welcome to the project manager!")
 
 try:
-    connection = sqlite3.connect(database='database.db')
+    connection = sqlite3.connect(database="database.db")
     cursor = connection.cursor()
 except sqlite3.Error as e:
     print(f"Error connecting to database: {e}")
@@ -45,7 +47,7 @@ except sqlite3.Error as e:
 # Get the directory of the current script
 script_dir = os.path.dirname(os.path.realpath(__file__))
 # Construct the relative path to user.ini
-config_file_path = os.path.join(script_dir, '../config/user.ini')
+config_file_path = os.path.join(script_dir, "../config/user.ini")
 
 config_parser = config.ConfigParser()
 config_parser.read(config_file_path)
@@ -54,15 +56,15 @@ SIGNUP = False
 # Sign up if the user needs to sign up
 
 try:
-    previous_login_time = config_parser.get('LastLogin', 'last_login')
+    previous_login_time = config_parser.get("LastLogin", "last_login")
 except config.NoOptionError:
     print("No previous login time found in user.ini, setting to default")
-    previous_login_time = '0000-00-00 00:00:00'
+    previous_login_time = "0000-00-00 00:00:00"
 
-if previous_login_time == '0000-00-00 00:00:00':
+if previous_login_time == "0000-00-00 00:00:00":
     signup.signup_main()
 
-last_login_str = config_parser['LastLogin']['last_login']
+last_login_str = config_parser["LastLogin"]["last_login"]
 # Attempt to parse last_login_str as a datetime object
 try:
     last_login = datetime.datetime.strptime(last_login_str, "%Y-%m-%d %H:%M:%S")
@@ -82,65 +84,67 @@ else:
     print("Error: Last login datetime is not valid")
 
 
-@Logger.log_action(action='Run todo command', severity=logging.INFO)
+@Logger.log_action(action="Run todo command", severity=logging.INFO)
 def todo_command():
     """This function commands shows user all current projects when called."""
-    print('Viewing existing projects...')
+    print("Viewing existing projects...")
     try:
-        cursor.execute('SELECT * FROM projects')
+        cursor.execute("SELECT * FROM projects")
         projects = cursor.fetchall()
-        tb_headers = ['ID', 'Name', 'Directory', 'link']
-        print(tabulate.tabulate(projects, headers=tb_headers, tablefmt='grid'))
-        print('... done!')
-    except 'NoProjectsFound':
-        print('No projects found, please create a new project.')
+        tb_headers = ["ID", "Name", "Directory", "link"]
+        print(tabulate.tabulate(projects, headers=tb_headers, tablefmt="grid"))
+        print("... done!")
+    except "NoProjectsFound":
+        print("No projects found, please create a new project.")
     sys.exit()
 
 
-@Logger.log_action(action='Run main.py #main# command', severity=logging.INFO)
+@Logger.log_action(action="Run main.py #main# command", severity=logging.INFO)
 def main():
     """This is the main function which is called by the TODO.sh script.
 
     called by todo.sh script
     """
 
-    full_command = ' '.join(argv[1:])
+    full_command = " ".join(argv[1:])
 
     exit = False
     while not exit:
-        user_input = Fore.RED + ''.join('Todo: ' + full_command) + Fore.RESET
+        user_input = Fore.RED + "".join("Todo: " + full_command) + Fore.RESET
         print(user_input)
 
         match argv[1]:
-            case 'new':
+            case "new":
                 new_project_instance = NewProject()
                 new_project_instance.new_project()
                 # NewProject.new_project()
                 # LogProject.log_command(full_command, True)
                 sys.exit()
-            case 'todo':
+            case "todo":
                 todo_command()
                 # LogProject.log_command(full_command, True)
                 sys.exit()
-            case 'finish':
+            case "finish":
                 FinishProject.FinishedProject()
                 # LogProject.log_command(full_command, True)
                 sys.exit()
-            case 'open':
+            case "open":
                 open_project_instance = OpenProject()
                 open_project_instance.open_project()
                 # LogProject.log_command(full_command, True)
                 sys.exit()
-            case 'exit':
+            case "exit":
                 # LogProject.log_command(full_command, True)
                 exit = True
             case _:
-                print("""Invalid command, please try again. Type
-                       "help" for a list of commands.""")
+                print(
+                    """Invalid command, please try again. Type
+                       "help" for a list of commands."""
+                )
                 # LogProject.log_command(full_command, False)
                 sys.exit()
         sys.exit()
-    print('Come again!')
+    print("Come again!")
     sys.exit()
 
 

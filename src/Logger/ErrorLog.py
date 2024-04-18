@@ -12,18 +12,20 @@ the project
 """
 
 import logging
+
 from colorama import Fore, Style
 
 logging.basicConfig(level=logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 
 # Define color codes
 COLOR_CODES = {
-    'ERROR': Fore.RED,
-    'CRITICAL': Fore.RED,
-    'WARNING': Fore.YELLOW,
-    'INFO': Fore.GREEN,
+    "ERROR": Fore.RED,
+    "CRITICAL": Fore.RED,
+    "WARNING": Fore.YELLOW,
+    "INFO": Fore.GREEN,
 }
+
 
 # Set up a custom color formatter
 class _ColoredFormatter(logging.Formatter):
@@ -36,10 +38,12 @@ class _ColoredFormatter(logging.Formatter):
         color = COLOR_CODES.get(levelname, Fore.WHITE)
         return f"{color}{message}{Style.RESET_ALL}"
 
+
 # Set up logger
 root_logger = logging.getLogger()
 for handler in root_logger.handlers:
-    handler.setFormatter(_ColoredFormatter('%(asctime)s - %(levelname)s - %(message)s'))
+    handler.setFormatter(_ColoredFormatter("%(asctime)s - %(levelname)s - %(message)s"))
+
 
 class Logger:
     """Logging class, decorate a function with log_action"""
@@ -54,28 +58,36 @@ class Logger:
 
         :param action: Description of the action being performed.
         """
+
         def decorator(func):
             def wrapper(*args, **kwargs):
                 levelname = None
                 message = "Logging Failure??"
                 try:
                     result = func(*args, **kwargs)
-                    levelname = 'INFO'
+                    levelname = "INFO"
                     message = f"SUCCESS - {action} - {func.__name__}"
-                    Logger.logger.log(severity, message)  # Use logger instance from Logger class
+                    Logger.logger.log(
+                        severity, message
+                    )  # Use logger instance from Logger class
                     return result
                 except TypeError as e:
-                    levelname = 'ERROR'
+                    levelname = "ERROR"
                     message = f"FAILURE - {e}"
-                    Logger.logger.log(severity, message)  # Use logger instance from Logger class
+                    Logger.logger.log(
+                        severity, message
+                    )  # Use logger instance from Logger class
                     raise
                 except Exception as e:
-                    levelname = 'FAILURE'
+                    levelname = "FAILURE"
                     message = f"FAILURE - Error in {func.__name__}: {e}"
-                    Logger.logger.log(severity, message)  # Use logger instance from Logger class
+                    Logger.logger.log(
+                        severity, message
+                    )  # Use logger instance from Logger class
                     raise
                 finally:
                     pass
-                
+
             return wrapper
+
         return decorator

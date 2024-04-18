@@ -1,8 +1,9 @@
 import os
-import pyodbc, struct
-from azure import identity
-
+import struct
 from typing import Union
+
+import pyodbc
+from azure import identity
 from fastapi import FastAPI
 from pydantic import BaseModel
 
