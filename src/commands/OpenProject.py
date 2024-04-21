@@ -1,6 +1,4 @@
-"""
-This file is responsible for opening a project in the user's preferred editor.
-"""
+"""Module For opening a project."""
 
 import logging
 import os
@@ -13,19 +11,18 @@ from Logger import Logger
 
 
 class OpenProject:
-    """
-    This class provides the functionality to open a project.
-    """
+    """This class provides the functionality to open a project."""
 
     def __init__(self):
+        """Initalize the openproject class."""
         self.connection = sqlite3.connect("database.db")
         self.cursor = self.connection.cursor()
         self.db = dataclass()
 
-    @Logger.log_action(action="Opening a project #main#", severity=logging.INFO)
+    @Logger.log_action(action="Opening a project#main#", severity=logging.INFO)
     def open_project(self):
         """
-        command function
+        command function.
 
         :param user_input: The user input to parse and execute.
         """
@@ -34,7 +31,9 @@ class OpenProject:
             print(f"Project ID: {project_id}")
         else:
             project_name = argv[2]
-            self.cursor.execute("SELECT id FROM projects WHERE name=?", (project_name,))
+            self.cursor.execute("""SELECT id
+                                FROM projects
+                                WHERE name=?""", (project_name,))
             project_id = self.cursor.fetchone()[0]
             print(f"Project ID: {project_id}")
 

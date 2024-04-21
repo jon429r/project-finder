@@ -1,5 +1,6 @@
 """
-finish_project.py
+finish_project.py.
+
 This module contains the class for the finish command.
 """
 
@@ -12,12 +13,10 @@ from Logger import Logger
 
 
 class FinishedProject:
-    """
-    This class provides the functionality to finish a project.
-
-    """
+    """This class provides the functionality to finish a project."""
 
     def __init__(self):
+        """Initialize the FinishedProject class."""
         self.connection = sqlite3.connect("database.db")
         self.cursor = self.connection.cursor()
         self.db = dataclass()
@@ -25,12 +24,10 @@ class FinishedProject:
     @Logger.log_action(action="Finish project", severity=logging.DEBUG)
     def finish_project(self):
         """
-        command function
+        Defines the command function.
 
         :param user_input: The user input to parse and execute.
-
         """
-
         if argv[2].isdigit():
             project_id = argv[2]
             print(f"Project ID: {project_id}")
@@ -60,7 +57,5 @@ class FinishedProject:
         return
 
     def helper(self):
-        """
-        Helper function
-        """
+        """Defines the Helper function."""
         pass

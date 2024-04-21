@@ -1,6 +1,4 @@
-"""
-This module is responsible for logging the commands that are executed by the user
-"""
+"""This module is responsible for logging the commands in the project."""
 
 import configparser as config
 import datetime
@@ -31,7 +29,7 @@ except FileExistsError as e:
 @Logger.log_action(action="Log command function", severity=logging.ERROR)
 def log_command(command, success):  # Corrected `success`
     """
-    Function adds to the log file with the information about the current command.
+    Adds to the log file with the information about the current command.
 
     Args:
         command (str): command with arguments  # Corrected 'arguments'
@@ -41,9 +39,11 @@ def log_command(command, success):  # Corrected `success`
     decrypted_username = decrypt_data(user)
 
     if success:  # Corrected `success`
-        log_statement = f"{datetime.datetime.now()} {decrypted_username} {command} Success"  # Corrected 'Success'
+        log_statement = f"""{datetime.datetime.now()} {decrypted_username}
+          {command} Success"""
     else:
-        log_statement = f"{datetime.datetime.now()} {decrypted_username} {command} Failure"  # Corrected 'Failure'
+        log_statement = f"""{datetime.datetime.now()} {decrypted_username}
+          {command} Failure"""
 
     with open(log_file, "a") as file:
         file.write(
